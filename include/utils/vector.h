@@ -14,6 +14,8 @@ struct string_rep {typedef void type;};
 template<> struct string_rep<float> {typedef float type;};
 template<> struct string_rep<unsigned char> {typedef int type;};
 
+// TODO: check if xcode and llvm can autocomplete this.
+
 /*
  * Base classes for vector types. They rely on the assumption that other fields
  * than what was written to in a union is defined behavior, which it isn't.
@@ -46,6 +48,8 @@ struct nvector {
   T values[Size];
 };
 
+// TODO: friend operators maybe. also good if we could move operator *=, *, etc.
+//       into parent, using CRTP.
 template<typename T>
 struct vector3 {
   vector3() {}
@@ -154,10 +158,13 @@ typedef color3<float> fcolor3;
 typedef color4<unsigned char> ubcolor4;
 typedef color3<unsigned char> ubcolor3;
 
-inline vector3<float> min(const vector3<float>& v1, const vector3<float>& v2) {
-  return vector3<float>(std::min(v1.x, v2.x), 
-                        std::min(v1.y, v2.y), 
-                        std::min(v1.z, v2.z));
+template<typename T>
+inline vector3<T> min(const vector3<T>& v1, const vector3<T>& v2) {
+  using std::min;
+  
+  return vector3<T>(min(v1.x, v2.x), 
+                    min(v1.y, v2.y), 
+                    min(v1.z, v2.z));
 }
 } // !p
 
