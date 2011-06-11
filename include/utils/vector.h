@@ -4,10 +4,12 @@
 #include <sstream>
 #include <string>
 #include <iostream>
+#include <algorithm>
 
 namespace p {
   
 template<typename T>
+// this is needed because chars should be cast to ints when outputted
 struct string_rep {typedef void type;};
 template<> struct string_rep<float> {typedef float type;};
 template<> struct string_rep<unsigned char> {typedef int type;};
@@ -20,7 +22,8 @@ template<typename T, int Size>
 struct nvector {
   T& operator[](size_t idx) {return values[idx]; }
   const T& operator[](size_t idx) const {return values[idx]; }
-  
+
+  // TODO: pull this into src
   operator std::string() const {
     typedef typename string_rep<T>::type string_type;
     
@@ -151,6 +154,11 @@ typedef color3<float> fcolor3;
 typedef color4<unsigned char> ubcolor4;
 typedef color3<unsigned char> ubcolor3;
 
+inline vector3<float> min(const vector3<float>& v1, const vector3<float>& v2) {
+  return vector3<float>(std::min(v1.x, v2.x), 
+                        std::min(v1.y, v2.y), 
+                        std::min(v1.z, v2.z));
+}
 } // !p
 
 #endif // !UTILS_VECTOR_H

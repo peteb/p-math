@@ -16,7 +16,7 @@ public:
   }
 
   template<typename InterfaceT>
-  InterfaceT* requestInterface() const {
+  InterfaceT* get() const {
     return reinterpret_cast<InterfaceT*>(getInterface(InterfaceT::id()));
   }
 
