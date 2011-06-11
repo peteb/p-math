@@ -1,9 +1,9 @@
-#include <services/portal.h>
+#include <portal.h>
 #include <stdexcept>
 #include <utility>
 #include <string>
 
-class Interface *Portal::getInterface(const std::string &id) const {
+class Interface *p::portal::getInterface(const std::string& id) const {
   InterfaceMap::const_iterator iter = interfaces.find(id);
   if (iter != interfaces.end()) {
     return iter->second;
@@ -12,6 +12,8 @@ class Interface *Portal::getInterface(const std::string &id) const {
   throw std::runtime_error("interface '" + id + "' not registered");
 }
 
-void Portal::addInterface(const std::string &id, class Interface *interface) {
+void p::Portal::addInterface(const std::string &id, 
+                             class Interface *interface) 
+{
   interfaces.insert(std::make_pair(id, interface));  
 }
