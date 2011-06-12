@@ -11,8 +11,9 @@ TEST(utils_vec, mul) {
 
   EXPECT_FLOAT_EQ(3.0f, v.x);
   EXPECT_FLOAT_EQ(6.0f, v.y);
-  EXPECT_FLOAT_EQ(9.0f, v.z);
+  EXPECT_FLOAT_EQ(9.2f, v.z);
 }
+
 
 // TODO: +, -, /, *, conversions between colors, normalization, cross product
 //       scalar product, lerp, ...

@@ -8,6 +8,17 @@
 
 namespace p {
   
+  
+// this file should define these types:
+// vec2, vec3, vec4, ivec2, ivec3, ivec4
+// color3, color4, ubcolor3, ubcolor4
+// all types have common operators (*,-,+,/,prefix-), and their *= counterpart.
+// equality & neq operators are only defined for integer types
+// lerp, minmax, normalize, magnitude should work on all.
+// saturate should work on colors (0..1) for floats, (0..255) for ub, etc.
+
+// different color types can be converted between eachother
+
 template<typename T>
 // this is needed because chars should be cast to ints when outputted
 struct string_rep {typedef void type;};
@@ -50,6 +61,11 @@ struct nvector {
 
 // TODO: friend operators maybe. also good if we could move operator *=, *, etc.
 //       into parent, using CRTP.
+
+// TODO: ärv från vector_base<3, float, vector3> kanske. och ha inte
+//       nvector som en del av unionen, testa om 
+//       T& operator[] {if idx==0 ret x; } skulle funka
+
 template<typename T>
 struct vector3 {
   vector3() {}
