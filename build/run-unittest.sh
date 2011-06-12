@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # list of unittest binaries
-targets=`find $1/bin/ -name unittest_*`
+targets=`find $1/bin/ -name *_unittest`
 
 ret=0
 # run all unittest
