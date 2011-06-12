@@ -89,3 +89,12 @@ TEST(utils_color, trunc) {
   EXPECT_FLOAT_EQ(40.0f, v.a);
 }
 
+TEST(utils_color, cast) {
+  fcolor4 c1(1.0f, 0.5f, 0.0f, 1.0f);
+  ubcolor4 c2 = c1;
+  
+  EXPECT_EQ(255, (int)c2.r);
+  EXPECT_EQ(127, (int)c2.g);
+  EXPECT_EQ(0,   (int)c2.b);
+  EXPECT_EQ(255, (int)c2.a);
+}

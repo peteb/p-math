@@ -21,6 +21,7 @@ namespace p {
 
 // different color types can be converted between eachother
 
+#pragma mark - Base types
 template<typename T>
 // this is needed because chars should be cast to ints when outputted
 struct string_rep {typedef void type;};
@@ -61,6 +62,7 @@ struct nvector {
   T values[Size];
 };
 
+#pragma mark - Coordinates/directional types
 // TODO: friend operators maybe. also good if we could move operator *=, *, etc.
 //       into parent, using CRTP.
 
@@ -116,6 +118,7 @@ struct vector4 {
   };
 };
 
+#pragma mark - Color types
 template<typename T>
 struct color_range {
 /*  static T min = std::numeric_limits<T>::min();
@@ -151,6 +154,8 @@ template<typename T>
 struct color4 : public vector4<T> {
   color4(T e1, T e2, T e3, T e4) : vector4<T>(e1, e2, e3, e4) {}
   
+  // Constructor for casting between different color types. ubcolor (255, 128, 0) will convert to
+  // color4<float>/fcolor4 (1.0, 0.5, 0).
   template<typename OtherT>
   color4(const vector4<OtherT>& other) 
     : vector4<T>(
@@ -171,11 +176,13 @@ struct color4 : public vector4<T> {
   }
 };
 
+#pragma mark - Default short-types
 typedef color4<float> fcolor4;
 typedef color3<float> fcolor3;
 typedef color4<unsigned char> ubcolor4;
 typedef color3<unsigned char> ubcolor3;
 
+#pragma mark - Overloaded algorithms
 template<typename T>
 inline vector3<T> min(const vector3<T>& v1, const vector3<T>& v2) {
   using std::min;
@@ -194,8 +201,10 @@ inline vector3<T> max(const vector3<T>& v1, const vector3<T>& v2) {
                     max(v1.z, v2.z));
 }
 
-vector3<float> lerp(const vector3<float>& begin, const vector3<float>& end, float amount) {
-  vector3<float> ret;
+// TODO: make lerp more generic, for all vector types.
+template<typename T>
+vector3<T> lerp(const vector3<T>& begin, const vector3<T>& end, T amount) {
+  vector3<T> ret;
   ret.x = lerp(begin.x, end.x, amount);
   ret.y = lerp(begin.y, end.y, amount);
   ret.z = lerp(begin.z, end.z, amount);
