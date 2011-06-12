@@ -182,6 +182,17 @@ inline vector3<T> min(const vector3<T>& v1, const vector3<T>& v2) {
                     min(v1.y, v2.y), 
                     min(v1.z, v2.z));
 }
+
+template<typename T>
+inline vector3<T> max(const vector3<T>& v1, const vector3<T>& v2) {
+  using std::max;
+    
+  return vector3<T>(max(v1.x, v2.x), 
+                    max(v1.y, v2.y), 
+                    max(v1.z, v2.z));
+}
+
+
 } // !p
 
 #endif // !UTILS_VECTOR_H
