@@ -9,7 +9,7 @@
 using namespace p;
 
 #pragma mark - Operators
-TEST(utils_vec, mul) {
+TEST(utils_vector, mul) {
   vector3<float> v(1.0f, 2.0f, 3.0f);
   v *= 3.0f;
 
@@ -19,7 +19,7 @@ TEST(utils_vec, mul) {
 }
 
 #pragma mark - Algorithms
-TEST(utils_vec, minmax) {
+TEST(utils_vector, minmax) {
   using std::min;
   vector3<float> v1(1.0f, -3.0f, 4.0f);
   vector3<float> v2(3.0f, 1.0f, -6.0f);
@@ -39,7 +39,7 @@ TEST(utils_vec, minmax) {
   }
 }
 
-TEST(utils_vec, lerp) {
+TEST(utils_vector, lerp) {
   using p::lerp;
   
   {
@@ -62,7 +62,7 @@ TEST(utils_vec, lerp) {
 // TODO: +, -, /, *, conversions between colors, normalization, cross product
 //       scalar product, lerp, ...
 
-TEST(utils_vec, string) {
+TEST(utils_vector, string) {
   vector3<float> v(3.0f, 2.0f, 1.5f);
   EXPECT_STREQ(std::string(v).c_str(), "(3, 2, 1.5)");  
 }

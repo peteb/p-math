@@ -1,7 +1,7 @@
 find_package(GTest REQUIRED)
 
-add_executable(unittest_utils EXCLUDE_FROM_ALL
-  test_vector.cpp  
+add_executable(utils_unittest EXCLUDE_FROM_ALL
+  vector_test.cpp  
 )
 
 include_directories(
@@ -9,10 +9,10 @@ include_directories(
   ${GTEST_INCLUDE_DIR}
 )
 
-target_link_libraries(unittest_utils
+target_link_libraries(utils_unittest
   ${GTEST_MAIN_LIBRARY}
   ${GTEST_LIBRARY}
   utils
 )
 
-add_dependencies(unittest unittest_utils)
+add_dependencies(unittest utils_unittest)
