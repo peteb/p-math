@@ -1,7 +1,10 @@
 #include <utils/vector.h>
+#include <utils/algorithm.h>
 #include <gtest/gtest.h>
 
 #include <string>
+
+// static asserts that vec3 == vector3<float>?
 
 using namespace p;
 
@@ -35,6 +38,25 @@ TEST(utils_vec, minmax) {
     EXPECT_FLOAT_EQ(4.0f, v3.z);
   }
 }
+
+TEST(utils_vec, lerp) {
+  using p::lerp;
+  
+  {
+    vector3<float> v1(0.0f, 0.0f, 0.0f);
+    vector3<float> v2(10.0f, 20.0f, 30.0f);
+    
+    const vector3<float>& v = lerp(v1, v2, 0.5f);
+    EXPECT_FLOAT_EQ( 5.0f, v.x);
+    EXPECT_FLOAT_EQ(10.0f, v.y);
+    EXPECT_FLOAT_EQ(15.0f, v.z);
+    
+  }
+  
+}
+
+// TODO: rename unittest_utils to utils_unittest
+//       rename test_vector.cpp to vector_test.cpp
 
 #pragma mark - Conversions
 // TODO: +, -, /, *, conversions between colors, normalization, cross product

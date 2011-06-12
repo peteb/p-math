@@ -12,8 +12,10 @@ T lerp(T begin, T end, Scalar amount) {
 
 
 template<typename T>
-T clamp(T val, T min, T max) {
-  return std::max(std::min(val, max), min);
+T clamp(T val, T vmin, T vmax) {
+  using std::max;
+  using std::min;
+  return max(min(val, vmax), vmin);
 }
 
 template<typename T>

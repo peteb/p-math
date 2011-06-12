@@ -6,6 +6,8 @@
 #include <iostream>
 #include <algorithm>
 
+#include <utils/algorithm.h>
+
 namespace p {
   
   
@@ -192,7 +194,14 @@ inline vector3<T> max(const vector3<T>& v1, const vector3<T>& v2) {
                     max(v1.z, v2.z));
 }
 
-
+vector3<float> lerp(const vector3<float>& begin, const vector3<float>& end, float amount) {
+  vector3<float> ret;
+  ret.x = lerp(begin.x, end.x, amount);
+  ret.y = lerp(begin.y, end.y, amount);
+  ret.z = lerp(begin.z, end.z, amount);
+  
+  return ret;
+}
 } // !p
 
 #endif // !UTILS_VECTOR_H
