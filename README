@@ -1,0 +1,52 @@
+README
+======
+This is my effort in trying to unify and archive reusable pieces of code, but
+also to provide a platform for easy cross-development on Mac OS X, Windows,
+Android and iOS. This is achieved through a service-oriented architecture with a 
+few well-defined "standardized" interfaces. 
+The application should register what kind of services (ie, "sound", "graphics")
+it needs and the build process will orchestrate a configuration for that 
+application on that particular platform.
+
+Utilities
+---------
+This is the most easily reusable part of the library; all that is needed to use
+in another project is often just a copy-paste of the header files. Contains:
+  * Vector data types for linear algebra, colors, etc.
+  * Matrix data types and operations
+  * Generic algorithms (lerp, clamp, saturate, etc)
+  * Logging classes
+
+Framework
+---------
+The framework part of the library does not pretend to be almighty; if you need,
+it should be possible to rely on implementation specifics. An example of this
+might be to get the HWND of a window on Windows platforms so you can display
+something extra nice, or just accessing something that hasn't propagated up to
+the "standardized" interfaces yet. This extension mechanism is implemented
+similar to OpenGL extensions; an implementation can expose functions mapped
+by a string which the clients can use to identify the feature.
+
+
+Copyrights
+==========
+Everything is copyright (C) Peter Backman, for now. I will look into the
+licensing later, but the idea right now is:
+  * The utility lib will be licensed quite liberally, a bit less strict than
+    BSD 3-clause.
+  * Framework part (including build system, interfaces, implementations, etc)
+    will be a little bit more strict. Maybe not by much, though.
+    
+    
+Building
+========
+cd build && cmake . -DTARGET=<TARGET> && make
+
+<TARGET> can be any of:
+  * tests -- create buildsystem for all generic non-implementation tests
+   
+The build system is tweaked for Xcode and Makefiles, so go ahead and test
+them :)
+
+
+
