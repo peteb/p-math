@@ -11,7 +11,7 @@ application on that particular platform.
 Utilities
 ---------
 This is the most easily reusable part of the library; all that is needed to use
-in another project is often just a copy-paste of the header files. Contains:
+in another project is often just a copy-paste of the header files. It's also heavily tested using unittests. Contains:
   * Vector data types for linear algebra, colors, etc.
   * Matrix data types and operations
   * Generic algorithms (lerp, clamp, saturate, etc)

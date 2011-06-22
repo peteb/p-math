@@ -6,28 +6,31 @@
 namespace p {
 
 template<typename T, typename Scalar>
-T lerp(T begin, T end, Scalar amount) {
-  return begin + (end - begin) * amount;
+inline T lerp(const T& begin, const T& end, Scalar amount) {
+  T ret = begin + (end - begin) * amount;
+  return ret;
 }
 
 
 template<typename T>
-T clamp(T val, T vmin, T vmax) {
+inline const T& clamp(const T& val, const T& vmin, const T& vmax) {
   using std::max;
   using std::min;
   return max(min(val, vmax), vmin);
 }
 
 template<typename T>
-T saturate(T val) {
-  return clamp(val, static_cast<T>(0.0), static_cast<T>(1.0));
+inline T saturate(const T& val) {
+  T ret = clamp(val, static_cast<T>(0.0), static_cast<T>(1.0));
+  return ret;
 }
 
 template<typename T>
-inline T wrap(T value, T lower, T upper) {
+inline T wrap(const T& value, const T& lower, const T& upper) {
   T distance = upper - lower;
   T times = floor((value - lower) / distance);
-  return value - (times * distance);
+  T ret = value - (times * distance);
+  return ret;
 }
 
 } // !p
