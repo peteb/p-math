@@ -179,6 +179,12 @@ namespace p {
     return lhs;
   }
 
+  template<int Size, typename T, typename RhT> 
+  inline vec<Size, T>& operator /=(vec<Size, T>& lhs, RhT rhs) {
+    lhs = lhs / vec<Size, T>(rhs);
+    return lhs;
+  }
+
   template<int Size, typename T> 
   inline vec<Size, T>& operator +=(vec<Size, T>& lhs, const vec<Size, T>& rhs) {
     lhs = lhs + rhs;
@@ -253,8 +259,8 @@ namespace p {
     return sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
   }
   
-  template<int Size, typename T>
-  inline void normalize(vec<Size, T>& v) {
+  template<typename T>
+  inline void normalize(T& v) {
     v /= magnitude(v);
   }
 
