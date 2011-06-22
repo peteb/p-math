@@ -20,7 +20,6 @@ namespace p {
   // this is needed because chars should be cast to ints when outputted
   template<typename T>
   struct string_rep {typedef T type;};
-  template<> struct string_rep<float> {typedef float type;};
   template<> struct string_rep<unsigned char> {typedef int type;};
 
   
