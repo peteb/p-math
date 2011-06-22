@@ -23,6 +23,9 @@ namespace p {
   template<> struct string_rep<unsigned char> {typedef int type;};
 
   
+
+  #pragma mark - Basic vector types
+
   template<int Size, typename T>
   struct vec {};
   
@@ -122,8 +125,10 @@ namespace p {
 
 
   };
-
+  
   // helpers
+  #pragma mark - Helpers
+  
   template<typename T, typename OpT>
   inline vec<2, T> doOp(const vec<2, T>& lhs, const vec<2, T>& rhs, const OpT& op) {
     vec<2, T> ret(op(lhs.x, rhs.x), op(lhs.y, rhs.y));
@@ -143,6 +148,7 @@ namespace p {
   }
 
   // operator overloads
+  #pragma mark - Operators
   template<int Size, typename T, typename OtherT> 
   inline vec<Size, T> operator *(const vec<Size, T>& lhs, OtherT rhs) {
     vec<Size, T> ret = doOp(lhs, vec<Size, T>(rhs), std::multiplies<T>());
@@ -184,6 +190,21 @@ namespace p {
     lhs = lhs - rhs;
     return lhs;
   }
+
+  template<int Size, typename T>
+  std::ostream& operator <<(std::ostream& out, const vec<Size, T>& v) {
+    out << std::string(v);
+    return out;
+  }
+  
+  template<int Size>
+  std::ostream& operator <<(std::ostream& out, const vec<Size, unsigned char>& v) {
+    // special case for char needed; we want to output it as an integer
+    out << std::string(v);
+    
+    return out;
+  }
+
   
   // some more helpers
   template<typename T>
@@ -196,7 +217,10 @@ namespace p {
     const T& operator()(const T& lhs, const T& rhs) const {using std::max; return max(lhs, rhs); }
   };
 
+  
   // algorithm overloads
+  #pragma mark - Algorithms
+
   template<int Size, typename T>
   inline vec<Size, T> min(const vec<Size, T>& v1, const vec<Size, T>& v2) {
     vec<Size, T> ret = doOp(v1, v2, min_fun<T>());
@@ -209,18 +233,36 @@ namespace p {
     return ret;
   }
 
-  template<int Size, typename T>
-  std::ostream& operator <<(std::ostream& out, const vec<Size, T>& v) {
-    out << std::string(v);
-    return out;
+  template<typename T>
+  inline T dot_product(const vec<2, T>& v1, const vec<2, T>& v2) {
+    return v1.x * v2.x + v1.y * v2.y;
   }
 
-  template<int Size>
-  std::ostream& operator <<(std::ostream& out, const vec<Size, unsigned char>& v) {
-    // special case for char needed; we want to output it as an integer
-    out << std::string(v);
-    
-    return out;
+  template<typename T>
+  inline T dot_product(const vec<3, T>& v1, const vec<3, T>& v2) {
+    return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
+  }
+
+  template<typename T>
+  inline T magnitude(const vec<2, T>& v) {
+    return sqrt(v.x * v.x + v.y * v.y);
+  }
+
+  template<typename T>
+  inline T magnitude(const vec<3, T>& v) {
+    return sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
+  }
+  
+  template<int Size, typename T>
+  inline void normalize(vec<Size, T>& v) {
+    v /= magnitude(v);
+  }
+
+  template<int Size, typename T>
+  inline vec<Size, T> normalized(const vec<Size, T>& v) {
+    vec<Size, T> ret = v;
+    v /= magnitude(v);
+    return ret;
   }
 
   typedef vec<2, float> vec2;

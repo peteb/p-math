@@ -61,6 +61,44 @@ TEST(utils_vector, lerp) {
   
 }
 
+TEST(utils_vector, dotproduct) {
+  using p::dot_product;
+
+  {
+    vec2 v1(1.0f, 2.0f);
+    vec2 v2(4.5f, 5.2f);
+    
+    vec2::value_type dp = dot_product(v1, v2);
+    EXPECT_FLOAT_EQ(14.9f, dp);
+  
+  }
+
+  {
+    vec3 v1(1.0f, 2.0f, 3.0f);
+    vec3 v2(4.5f, 5.2f, 6.2f);
+    
+    vec3::value_type dp = dot_product(v1, v2);
+    EXPECT_FLOAT_EQ(33.5f, dp);
+  }
+}
+
+TEST(utils_vector, normalize) {
+  using p::normalize;
+  
+  {
+    vec2 v1(0.0f, 2.0f);
+    normalize(v1);
+    EXPECT_FLOAT_EQ(0.0f, v1.x);
+    EXPECT_FLOAT_EQ(1.0f, v1.y);
+    
+    // TODO: some more tests for vec2
+  }
+  
+  // TODO: for vec3 also
+}
+
+// TODO: normalized, magnitude
+
 #pragma mark - Conversions
 // TODO: +, -, /, *, conversions between colors, normalization, cross product
 //       scalar product, lerp, ...
@@ -71,7 +109,7 @@ TEST(utils_vector, string) {
   EXPECT_STREQ(str, "3, 2, 1.5");  
 }
 
-
+// TODO: vec2, vec3, vec4 truncate
 
 /*TEST(utils_color, trunc) {
   color4<float> v(10.0f, 20.0f, 30.0f, 40.0f);
