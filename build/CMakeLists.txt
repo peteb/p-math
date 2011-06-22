@@ -38,3 +38,9 @@ add_custom_target(clean-gen
 	rm -rf CMakeFiles CMakeCache.txt Makefile ../bin 
 )
 
+
+
+# some compiler flags. would be better to have them somewhere else..
+if(CMAKE_COMPILER_IS_GNUCXX)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
+endif(CMAKE_COMPILER_IS_GNUCXX)
