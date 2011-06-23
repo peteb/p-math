@@ -19,14 +19,14 @@ inline T lerp(const T& begin, const T& end, Scalar amount) {
  * @brief Restricts a value to a range
  */
 template<typename T>
-inline T clamp(const T& val, const T& vmin, const T& vmax) {
+inline const T& clamp(const T& val, const T& vmin, const T& vmax) {
   using std::max;
   using std::min;
   return max(min(val, vmax), vmin);
 }
   
 template<typename T>
-inline T clamp(const T& val, const std::pair<T, T>& range) {
+inline const T& clamp(const T& val, const std::pair<T, T>& range) {
   return clamp(val, range.first, range.second);
 }
 
