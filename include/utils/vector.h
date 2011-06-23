@@ -277,20 +277,6 @@ namespace p {
   typedef vec<4, unsigned char> ubvec4;
 
   
-  
-
-// this file should define these types:
-// vec2, vec3, vec4, ivec2, ivec3, ivec4
-// color3, color4, ubcolor3, ubcolor4
-// all types have common operators (*,-,+,/,prefix-), and their *= counterpart.
-// equality & neq operators are only defined for integer types
-// lerp, minmax, normalize, magnitude should work on all.
-// saturate should work on colors (0..1) for floats, (0..255) for ub, etc.
-
-// different color types can be converted between eachother
-
-
-
 } // !p
 
 #endif // !UTILS_VECTOR_H
