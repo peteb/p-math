@@ -9,20 +9,35 @@ using namespace p;
 
 #pragma mark - Operators
 TEST(utils_vector, mul) {
-  vec3 v(1.0f, 2.0f, 3.0f);
-  
+  vec3 v(1.0f, 2.0f, 3.0f);  
   v *= 3.0f;
-
-  vec2 hej;
-  hej * vec2(1.0f, 2.0f);
-  hej * -vec2(2.0f, 3.0f);
+  v = v * 2.0f;
   
-  vec2 katt = min(vec2(1.0f, 1.0f), vec2(0.0f, 4.0f));
-  
-  EXPECT_FLOAT_EQ(3.0f, v.x);
-  EXPECT_FLOAT_EQ(6.0f, v.y);
-  EXPECT_FLOAT_EQ(9.0f, v.z);
+  EXPECT_FLOAT_EQ(6.0f, v.x);
+  EXPECT_FLOAT_EQ(12.0f, v.y);
+  EXPECT_FLOAT_EQ(18.0f, v.z);
 }
+
+TEST(utils_vector, div) {
+  vec3 v(1.0f, 2.0f, 3.0f);  
+  v /= 3.0f;
+  v = v / 2.0f;
+  
+  EXPECT_FLOAT_EQ(1.0f/3.0f/2.0f, v.x);
+  EXPECT_FLOAT_EQ(2.0f/3.0f/2.0f, v.y);
+  EXPECT_FLOAT_EQ(0.5f, v.z);
+}
+
+TEST(utils_vector, add) {
+  vec3 v(1.0f, 2.0f, 3.0f);  
+  v += vec3(3.0f, 4.0f, 5.0f);
+  v = v + vec3(2.0f, 2.1f, 2.2f);
+  
+  EXPECT_FLOAT_EQ(6.0f, v.x);
+  EXPECT_FLOAT_EQ(8.1f, v.y);
+  EXPECT_FLOAT_EQ(10.2f, v.z);
+}
+
 
 #pragma mark - Algorithms
 TEST(utils_vector, minmax) {
@@ -90,7 +105,6 @@ TEST(utils_vector, normalize) {
     normalize(v1);
     EXPECT_FLOAT_EQ(0.0f, v1.x);
     EXPECT_FLOAT_EQ(1.0f, v1.y);
-    
     // TODO: some more tests for vec2
   }
   
@@ -100,9 +114,6 @@ TEST(utils_vector, normalize) {
 // TODO: normalized, magnitude
 
 #pragma mark - Conversions
-// TODO: +, -, /, *, conversions between colors, normalization, cross product
-//       scalar product, lerp, ...
-
 TEST(utils_vector, string) {
   vec3 v(3.0f, 2.0f, 1.5f);
   const char* str = std::string(v).c_str();
