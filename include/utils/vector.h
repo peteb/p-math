@@ -89,7 +89,7 @@ namespace p {
   // helpers
   #pragma mark - Helpers
   
-  // this is needed because chars should be cast to std::size_ts when outputted
+  // this is needed because chars should be cast to ints when outputted
   template<typename T>
   struct string_rep {typedef T type;};
   template<> struct string_rep<unsigned char> {typedef std::size_t type;};
@@ -237,9 +237,9 @@ namespace p {
   typedef vec<float, 2> vec2;
   typedef vec<float, 3> vec3;
   typedef vec<float, 4> vec4;
-  typedef vec<std::size_t, 2> ivec2;
-  typedef vec<std::size_t, 3> ivec3;
-  typedef vec<std::size_t, 4> ivec4;
+  typedef vec<int, 2> ivec2;
+  typedef vec<int, 3> ivec3;
+  typedef vec<int, 4> ivec4;
   typedef vec<unsigned char, 3> ubvec3;
   typedef vec<unsigned char, 4> ubvec4;
 
