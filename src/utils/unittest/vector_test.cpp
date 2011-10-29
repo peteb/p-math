@@ -3,7 +3,7 @@
 #include <gtest/gtest.h>
 
 #include <string>
-
+#include <sstream>
 
 using namespace p;
 
@@ -16,6 +16,14 @@ TEST(utils_vector, mul) {
   EXPECT_FLOAT_EQ(6.0f, v.x);
   EXPECT_FLOAT_EQ(12.0f, v.y);
   EXPECT_FLOAT_EQ(18.0f, v.z);
+}
+
+TEST(utils_vector, negation) {
+  vec3 v(1.0f, 2.0f, 3.0f);
+  vec3 v2 = -v;
+  EXPECT_FLOAT_EQ(-1.0f, v2.x);
+  EXPECT_FLOAT_EQ(-2.0f, v2.y);
+  EXPECT_FLOAT_EQ(-3.0f, v2.z);
 }
 
 TEST(utils_vector, div) {
@@ -116,8 +124,9 @@ TEST(utils_vector, normalize) {
 #pragma mark - Conversions
 TEST(utils_vector, string) {
   vec3 v(3.0f, 2.0f, 1.5f);
-  const char* str = std::string(v).c_str();
-  EXPECT_STREQ(str, "3, 2, 1.5");  
+  std::stringstream ss;
+  ss << v;
+  EXPECT_STREQ(ss.str().c_str(), "3, 2, 1.5");  
 }
 
 // TODO: vec2, vec3, vec4 truncate
