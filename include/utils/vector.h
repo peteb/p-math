@@ -104,13 +104,10 @@ namespace p {
   }
   
   template<typename T, std::size_t size, typename OpT>
-  inline vec<T, size> doOp(const vec<T, size> &lhs, const vec<T, size> &rhs, OpT op) {
+  inline vec<T, size> transform(const vec<T, size> &lhs, const vec<T, size> &rhs, OpT op) {
     vec<T, size> ret;
     
-    for (std::size_t i = 0; i < size; ++i) {
-      ret.components[i] = op(lhs.components[i], rhs.components[i]); // can this be done using algorithm?
-    }
-
+    std::transform(lhs.components, lhs.components + size, rhs.components, ret.components, op);
     return ret;
   }
 
@@ -119,13 +116,13 @@ namespace p {
   #pragma mark - Operators
   template<typename T, std::size_t size> 
   inline vec<T, size> operator +(const vec<T, size> &lhs, const vec<T, size> &rhs) {
-    vec<T, size> ret = doOp(lhs, rhs, std::plus<T>());
+    vec<T, size> ret = transform(lhs, rhs, std::plus<T>());
     return ret;
   }
 
   template<typename T, std::size_t size> 
   inline vec<T, size> operator -(const vec<T, size>& lhs, const vec<T, size>& rhs) {
-    vec<T, size> ret = doOp(lhs, rhs, std::minus<T>());
+    vec<T, size> ret = transform(lhs, rhs, std::minus<T>());
     return ret;
   }
 
@@ -145,13 +142,13 @@ namespace p {
 
   template<typename T, std::size_t size, typename Scalar> 
   inline vec<T, size> operator *(const vec<T, size> &lhs, Scalar rhs) {
-    vec<T, size> ret = doOp(lhs, vec<T, size>(rhs), std::multiplies<T>());
+    vec<T, size> ret = transform(lhs, vec<T, size>(rhs), std::multiplies<T>());
     return ret;
   }
 
   template<typename T, std::size_t size, typename Scalar> 
   inline vec<T, size> operator /(const vec<T, size>& lhs, Scalar rhs) {
-    vec<T, size> ret = doOp(lhs, vec<T, size>(rhs), std::divides<T>());
+    vec<T, size> ret = transform(lhs, vec<T, size>(rhs), std::divides<T>());
     return ret;
   }
   
@@ -191,13 +188,13 @@ namespace p {
 
   template<typename T, std::size_t size>
   inline vec<T, size> min(const vec<T, size> &v1, const vec<T, size> &v2) {
-    vec<T, size> ret = doOp(v1, v2, min_fun<T>());
+    vec<T, size> ret = transform(v1, v2, min_fun<T>());
     return ret;
   }
 
   template<typename T, std::size_t size>
   inline vec<T, size> max(const vec<T, size> &v1, const vec<T, size> &v2) {
-    vec<T, size> ret = doOp(v1, v2, max_fun<T>());
+    vec<T, size> ret = transform(v1, v2, max_fun<T>());
     return ret;
   }
 
