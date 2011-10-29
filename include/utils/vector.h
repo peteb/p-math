@@ -20,7 +20,7 @@ namespace p {
   // The base classes
   #pragma mark - Basic vector types
 
-  template<typename T, int size>
+  template<typename T, std::size_t size>
   struct vec {
     explicit vec(T val) {std::fill(components, components + size, val);}
     explicit vec(T *values) {std::copy(values, values + size, components);}
@@ -30,6 +30,8 @@ namespace p {
     T components[size];
   };
 
+  template<typename T>
+  struct vec<T, 0> {};
   
   template<typename T>
   struct vec<T, 2> {
@@ -49,7 +51,7 @@ namespace p {
   
   
   template<typename T>
-  struct vec<T, 3> {
+  struct vec<T, 3> {  // enable_if<is_pod<T> >
     vec() {}
     explicit vec(T x, T y, T z) : x(x), y(y), z(z) {}
     explicit vec(T val) {std::fill(components, components + 3, val);}
@@ -87,12 +89,12 @@ namespace p {
   // helpers
   #pragma mark - Helpers
   
-  // this is needed because chars should be cast to ints when outputted
+  // this is needed because chars should be cast to std::size_ts when outputted
   template<typename T>
   struct string_rep {typedef T type;};
-  template<> struct string_rep<unsigned char> {typedef int type;};
+  template<> struct string_rep<unsigned char> {typedef std::size_t type;};
   
-  template<typename T, int size>
+  template<typename T, std::size_t size>
   std::ostream &operator <<(std::ostream &s, const vec<T, size> &v) {
     s << v.components[0];
     for (std::size_t i = 1; i < size; ++i)
@@ -101,7 +103,7 @@ namespace p {
     return s;  
   }
   
-  template<typename T, int size, typename OpT>
+  template<typename T, std::size_t size, typename OpT>
   inline vec<T, size> doOp(const vec<T, size> &lhs, const vec<T, size> &rhs, OpT op) {
     vec<T, size> ret;
     
@@ -115,25 +117,25 @@ namespace p {
 
   // operator overloads
   #pragma mark - Operators
-  template<typename T, int size> 
+  template<typename T, std::size_t size> 
   inline vec<T, size> operator +(const vec<T, size> &lhs, const vec<T, size> &rhs) {
     vec<T, size> ret = doOp(lhs, rhs, std::plus<T>());
     return ret;
   }
 
-  template<typename T, int size> 
+  template<typename T, std::size_t size> 
   inline vec<T, size> operator -(const vec<T, size>& lhs, const vec<T, size>& rhs) {
     vec<T, size> ret = doOp(lhs, rhs, std::minus<T>());
     return ret;
   }
 
-  template<typename T, int size, typename Scalar> 
+  template<typename T, std::size_t size, typename Scalar> 
   inline vec<T, size>& operator *=(vec<T, size>& lhs, Scalar rhs) {
     lhs = lhs * vec<T, size>(rhs);
     return lhs;
   }
 
-  template<typename T, int size>
+  template<typename T, std::size_t size>
   inline vec<T, size> operator -(const vec<T, size> &rhs) {
     vec<T, size> ret;
     for (std::size_t i = 0; i < size; ++i)
@@ -141,31 +143,31 @@ namespace p {
     return ret;
   }
 
-  template<typename T, int size, typename Scalar> 
+  template<typename T, std::size_t size, typename Scalar> 
   inline vec<T, size> operator *(const vec<T, size> &lhs, Scalar rhs) {
     vec<T, size> ret = doOp(lhs, vec<T, size>(rhs), std::multiplies<T>());
     return ret;
   }
 
-  template<typename T, int size, typename Scalar> 
+  template<typename T, std::size_t size, typename Scalar> 
   inline vec<T, size> operator /(const vec<T, size>& lhs, Scalar rhs) {
     vec<T, size> ret = doOp(lhs, vec<T, size>(rhs), std::divides<T>());
     return ret;
   }
   
-  template<typename T, int size, typename Scalar> 
+  template<typename T, std::size_t size, typename Scalar> 
   inline vec<T, size>& operator /=(vec<T, size>& lhs, Scalar rhs) {
     lhs = lhs / vec<T, size>(rhs);
     return lhs;
   }
 
-  template<typename T, int size> 
+  template<typename T, std::size_t size> 
   inline vec<T, size>& operator +=(vec<T, size>& lhs, const vec<T, size>& rhs) {
     lhs = lhs + rhs;
     return lhs;
   }
   
-  template<typename T, int size> 
+  template<typename T, std::size_t size> 
   inline vec<T, size>& operator -=(vec<T, size>& lhs, const vec<T, size>& rhs) {
     lhs = lhs - rhs;
     return lhs;
@@ -187,20 +189,20 @@ namespace p {
   // algorithm overloads
   #pragma mark - Algorithms
 
-  template<typename T, int size>
+  template<typename T, std::size_t size>
   inline vec<T, size> min(const vec<T, size> &v1, const vec<T, size> &v2) {
     vec<T, size> ret = doOp(v1, v2, min_fun<T>());
     return ret;
   }
 
-  template<typename T, int size>
+  template<typename T, std::size_t size>
   inline vec<T, size> max(const vec<T, size> &v1, const vec<T, size> &v2) {
     vec<T, size> ret = doOp(v1, v2, max_fun<T>());
     return ret;
   }
 
   
-  template<typename T, int size>
+  template<typename T, std::size_t size>
   inline T dot_product(const vec<T, size> &v1, const vec<T, size> &v2) {
     T ret = v1.components[0] * v2.components[0];
     for (std::size_t i = 1; i < size; ++i) {
@@ -211,7 +213,7 @@ namespace p {
   }
   
   
-  template<typename T, int size>
+  template<typename T, std::size_t size>
   inline T magnitude(const vec<T, size> &v) {
     T sum = v.components[0] * v.components[0];
     for (std::size_t i = 1; i < size; ++i)
@@ -235,9 +237,9 @@ namespace p {
   typedef vec<float, 2> vec2;
   typedef vec<float, 3> vec3;
   typedef vec<float, 4> vec4;
-  typedef vec<int, 2> ivec2;
-  typedef vec<int, 3> ivec3;
-  typedef vec<int, 4> ivec4;
+  typedef vec<std::size_t, 2> ivec2;
+  typedef vec<std::size_t, 3> ivec3;
+  typedef vec<std::size_t, 4> ivec4;
   typedef vec<unsigned char, 3> ubvec3;
   typedef vec<unsigned char, 4> ubvec4;
 
