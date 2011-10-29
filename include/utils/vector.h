@@ -9,6 +9,7 @@
 #include <cassert>
 #include <cmath>
 #include <ostream>
+#include <numeric>
 
 #include <utils/algorithm.h>
 
@@ -106,7 +107,6 @@ namespace p {
   template<typename T, std::size_t size, typename OpT>
   inline vec<T, size> transform(const vec<T, size> &lhs, const vec<T, size> &rhs, OpT op) {
     vec<T, size> ret;
-    
     std::transform(lhs.components, lhs.components + size, rhs.components, ret.components, op);
     return ret;
   }
@@ -174,12 +174,12 @@ namespace p {
   // some more helpers
   template<typename T>
   struct min_fun {
-    const T& operator()(const T& lhs, const T& rhs) const {using std::min; return min(lhs, rhs); }
+    T operator()(T lhs, T rhs) const {using std::min; return min(lhs, rhs); }
   };
 
   template<typename T>
   struct max_fun {
-    const T& operator()(const T& lhs, const T& rhs) const {using std::max; return max(lhs, rhs); }
+    T operator()(T lhs, T rhs) const {using std::max; return max(lhs, rhs); }
   };
 
   
@@ -212,11 +212,8 @@ namespace p {
   
   template<typename T, std::size_t size>
   inline T magnitude(const vec<T, size> &v) {
-    T sum = v.components[0] * v.components[0];
-    for (std::size_t i = 1; i < size; ++i)
-      sum += v.components[i] * v.components[i];
-    
-    return sqrt(sum);
+    T sumSquared = std::inner_product(v.components, v.components + size, v.components, 0);
+    return sqrt(sumSquared);
   }
   
   // very generic normalize function
