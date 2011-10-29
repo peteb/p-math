@@ -201,18 +201,13 @@ namespace p {
   
   template<typename T, std::size_t size>
   inline T dot_product(const vec<T, size> &v1, const vec<T, size> &v2) {
-    T ret = v1.components[0] * v2.components[0];
-    for (std::size_t i = 1; i < size; ++i) {
-      ret += v1.components[i] * v2.components[i];
-    }
-    
-    return ret;
+    return std::inner_product(v1.components, v1.components + size, v2.components, T(0));
   }
   
   
   template<typename T, std::size_t size>
   inline T magnitude(const vec<T, size> &v) {
-    T sumSquared = std::inner_product(v.components, v.components + size, v.components, 0);
+    T sumSquared = std::inner_product(v.components, v.components + size, v.components, T(0));
     return sqrt(sumSquared);
   }
   
