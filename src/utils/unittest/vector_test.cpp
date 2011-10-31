@@ -155,6 +155,42 @@ TEST(utils_vector, parse) {
   }
 }
 
+TEST(utils_vector, color_parse) {
+  {
+    std::stringstream ss("red");
+    vec3 c;
+    EXPECT_TRUE(ss >> color_reader(c));
+    EXPECT_FLOAT_EQ(1.0f, c.r);
+    EXPECT_FLOAT_EQ(0.0f, c.g);
+    EXPECT_FLOAT_EQ(0.0f, c.b);
+  }
+  
+  {
+    std::stringstream ss("0xFFAA22");
+    vec3 c;
+    EXPECT_TRUE(ss >> color_reader(c));
+    EXPECT_FLOAT_EQ(1.0f, c.r);
+    EXPECT_FLOAT_EQ(0.66666666f, c.g);
+    EXPECT_NEAR(0.13333333f, c.b, 0.02f);
+  }
+  
+  {
+    std::stringstream ss("0xFF0088");
+    ubvec3 c;
+    EXPECT_TRUE(ss >> color_reader(c));
+    EXPECT_EQ(0xFF, c.r);
+    EXPECT_EQ(0x00, c.g);
+    EXPECT_EQ(0x88, c.b);
+  }
+}
+
+TEST(utils_vector, color_print) {
+  
+  {
+    std::stringstream ss;
+  }
+
+}
 // TODO: performance tests, crossproduct
 
 // TODO: vec2, vec3, vec4 truncate

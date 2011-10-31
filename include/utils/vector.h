@@ -49,7 +49,10 @@ namespace p {
     explicit vec(T x, T y) : x(x), y(y) {}
     explicit vec(T val) {std::uninitialized_fill(components, components + 2, val);}
     explicit vec(T *values) {std::uninitialized_copy(values, values + 2, components);}
-    
+
+    inline T &operator [](std::size_t pos) {return components[pos];}
+    inline T operator [](std::size_t pos) const {return components[pos];}
+
     typedef T value_type;
 
     union {
@@ -69,7 +72,10 @@ namespace p {
     explicit vec(T x, T y, T z) : x(x), y(y), z(z) {}
     explicit vec(T val) {std::uninitialized_fill(components, components + 3, val);}
     explicit vec(T *values) {std::uninitialized_copy(values, values + 3, components);}
-    
+
+    inline T &operator [](std::size_t pos) {return components[pos];}
+    inline T operator [](std::size_t pos) const {return components[pos];}
+
     typedef T value_type;
 
     union {
@@ -90,6 +96,9 @@ namespace p {
     explicit vec(T val) {std::uninitialized_fill(components, components + 4, val);}
     explicit vec(T *values) {std::uninitialized_copy(values, values + 4, components);}
 
+    inline T &operator [](std::size_t pos) {return components[pos];}
+    inline T operator [](std::size_t pos) const {return components[pos];}
+
     typedef T value_type;
 
     union {
@@ -97,7 +106,7 @@ namespace p {
       struct {T s, t, p, q; };
       struct {T r, g, b, a; };
       struct {T components[4]; };
-    };
+    };    
   };
 
   
@@ -131,7 +140,7 @@ namespace p {
   inline vec<T, size> operator -(const vec<T, size> &rhs) {
     vec<T, size> ret;
     for (std::size_t i = 0; i < size; ++i)
-      ret.components[i] = -rhs.components[i];
+      ret[i] = -rhs[i];
     return ret;
   }
 
