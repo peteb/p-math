@@ -131,6 +131,29 @@ TEST(utils_vector, string) {
   EXPECT_STREQ(ss.str().c_str(), "3, 2, 1.5");  
 }
 
+TEST(utils_vector, parse) {
+  {
+    std::stringstream ss("123 -23.3");
+    vec3 v;
+    EXPECT_TRUE(ss >> v);
+    EXPECT_FLOAT_EQ(123.0f, v.x);
+    EXPECT_FLOAT_EQ(-23.3f, v.y);  
+  }
+
+  {
+    std::stringstream ss("Null");
+    vec3 v;
+    EXPECT_TRUE(ss >> v);
+    EXPECT_FLOAT_EQ(0.0f, v.x);
+    EXPECT_FLOAT_EQ(0.0f, v.y);  
+  }
+
+  {
+    std::stringstream ss("marsvin");
+    vec3 v;
+    EXPECT_FALSE(ss >> v);
+  }
+}
 
 // TODO: performance tests, crossproduct
 
