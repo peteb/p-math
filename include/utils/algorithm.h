@@ -7,19 +7,20 @@
 namespace p {
   
   /*
-   * @brief Linear interpolation between two values.
+   * Linear interpolation between two values.
    */
   template<typename T, typename Scalar>
   inline T lerp(const T& begin, const T& end, Scalar amount) {
-    T ret = begin + (end - begin) * amount;
+    //T ret = begin + (end - begin) * amount;
+    T ret = begin * (Scalar(1.0) - amount) + end * amount; // doesn't require T::operator -
     return ret;
   }
   
   /*
-   * @brief Restricts a value to a range
+   * Restricts a value to a range
    */
   template<typename T>
-  inline const T& clamp(const T& val, const T& vmin, const T& vmax) {
+  inline T clamp(T val, T vmin, T vmax) {
     using std::max;
     using std::min;
     return max(min(val, vmax), vmin);
@@ -31,17 +32,15 @@ namespace p {
   }
   
   /*
-   * @brief Forces a value to be between 0.0 and 1.0
+   * Forces a value to be between 0.0 and 1.0
    */
   template<typename T>
   inline T saturate(const T& val) {
-    T ret = clamp(val, static_cast<T>(0.0), static_cast<T>(1.0));
-    return ret;
+    return clamp(val, T(0.0), T(1.0));
   }
   
   /*
-   * @brief Wraps a value in a range. Useful when
-   *        dealing with rotations.
+   * Wraps a value in a range. Useful when dealing with rotations.
    */
   template<typename T>
   inline T wrap(const T& value, const T& lower, const T& upper) {

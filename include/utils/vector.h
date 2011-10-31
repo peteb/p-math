@@ -1,45 +1,54 @@
-#ifndef UTILS_VECTOR_H
-#define UTILS_VECTOR_H
+// -*- c++ -*-
 
-#include <sstream>
-#include <string>
-#include <iostream>
+#ifndef P_UTILS_VECTOR_H
+#define P_UTILS_VECTOR_H
+
 #include <algorithm>
 #include <functional>
 #include <cassert>
 #include <cmath>
-#include <ostream>
 #include <numeric>
+#include <memory>
 
 #include <utils/algorithm.h>
 
 // TODO: add header here for some simple use cases
-// just do this, add some tests, and be done with it
+
 
 namespace p {
+  // TODO: make sure clamp, lerp, etc. work with vectors
   
-  // The base classes
-  #pragma mark - Basic vector types
+  #pragma mark Basic vector types
 
+  /**
+   * The general case.
+   */
   template<typename T, std::size_t size>
   struct vec {
-    explicit vec(T val) {std::fill(components, components + size, val);}
-    explicit vec(T *values) {std::copy(values, values + size, components);}
+    vec() {}
+    explicit vec(T val) {std::uninitialized_fill(components, components + size, val);}
+    explicit vec(T *values) {std::uninitialized_copy(values, values + size, components);}
     
     typedef T value_type;
     
     T components[size];
   };
 
+  /**
+   * Bottom type.
+   */
   template<typename T>
-  struct vec<T, 0> {};
+  struct vec<T, 0> {private: vec() {}};
   
+  /**
+   * Specialization of vector for 2 components, which must be POD type.
+   */
   template<typename T>
   struct vec<T, 2> {
     vec() {}
     explicit vec(T x, T y) : x(x), y(y) {}
-    explicit vec(T val) {std::fill(components, components + 2, val);}
-    explicit vec(T *values) {std::copy(values, values + 2, components);}
+    explicit vec(T val) {std::uninitialized_fill(components, components + 2, val);}
+    explicit vec(T *values) {std::uninitialized_copy(values, values + 2, components);}
     
     typedef T value_type;
 
@@ -51,87 +60,73 @@ namespace p {
   };
   
   
+  /**
+   * Specialization of vector for 3 components, which must be POD type.
+   */
   template<typename T>
-  struct vec<T, 3> {  // enable_if<is_pod<T> >
+  struct vec<T, 3> {
     vec() {}
     explicit vec(T x, T y, T z) : x(x), y(y), z(z) {}
-    explicit vec(T val) {std::fill(components, components + 3, val);}
-    explicit vec(T *values) {std::copy(values, values + 3, components);}
+    explicit vec(T val) {std::uninitialized_fill(components, components + 3, val);}
+    explicit vec(T *values) {std::uninitialized_copy(values, values + 3, components);}
     
     typedef T value_type;
 
     union {
       struct {T x, y, z; };
-      struct {T u, v, s; };
+      struct {T s, t, p; };
+      struct {T r, g, b; };
       struct {T components[3]; };
     };
   };
 
+  /**
+   * Specialization of vector for 4 components, which must be POD type.
+   */
   template<typename T>
   struct vec<T, 4> {
     vec() {}
     explicit vec(T x, T y, T z, T w) : x(x), y(y), z(z), w(w) {}
-    explicit vec(T val) {std::fill(components, components + 4, val);}
-    explicit vec(T *values) {std::copy(values, values + 4, components);}
+    explicit vec(T val) {std::uninitialized_fill(components, components + 4, val);}
+    explicit vec(T *values) {std::uninitialized_copy(values, values + 4, components);}
 
     typedef T value_type;
 
     union {
       struct {T x, y, z, w; };
-      struct {T u, v, s, t; };
+      struct {T s, t, p, q; };
+      struct {T r, g, b, a; };
       struct {T components[4]; };
     };
   };
 
   
-
-
-  
-  // helpers
-  #pragma mark - Helpers
-  
-  // this is needed because chars should be cast to ints when outputted
-  template<typename T>
-  struct string_rep {typedef T type;};
-  template<> struct string_rep<unsigned char> {typedef std::size_t type;};
-  
-  template<typename T, std::size_t size>
-  std::ostream &operator <<(std::ostream &s, const vec<T, size> &v) {
-    s << v.components[0];
-    for (std::size_t i = 1; i < size; ++i)
-      s << ", " << typename string_rep<T>::type(v.components[i]);
+  #pragma mark Helpers
     
-    return s;  
-  }
-  
   template<typename T, std::size_t size, typename OpT>
   inline vec<T, size> transform(const vec<T, size> &lhs, const vec<T, size> &rhs, OpT op) {
     vec<T, size> ret;
     std::transform(lhs.components, lhs.components + size, rhs.components, ret.components, op);
     return ret;
   }
+  
+  template<typename T>
+  struct min_fun {
+    T operator()(T lhs, T rhs) const {using std::min; return min(lhs, rhs); }
+  };
+  
+  template<typename T>
+  struct max_fun {
+    T operator()(T lhs, T rhs) const {using std::max; return max(lhs, rhs); }
+  };
 
 
-  // operator overloads
-  #pragma mark - Operators
-  template<typename T, std::size_t size> 
-  inline vec<T, size> operator +(const vec<T, size> &lhs, const vec<T, size> &rhs) {
-    vec<T, size> ret = transform(lhs, rhs, std::plus<T>());
-    return ret;
-  }
 
-  template<typename T, std::size_t size> 
-  inline vec<T, size> operator -(const vec<T, size>& lhs, const vec<T, size>& rhs) {
-    vec<T, size> ret = transform(lhs, rhs, std::minus<T>());
-    return ret;
-  }
-
-  template<typename T, std::size_t size, typename Scalar> 
-  inline vec<T, size>& operator *=(vec<T, size>& lhs, Scalar rhs) {
-    lhs = lhs * vec<T, size>(rhs);
-    return lhs;
-  }
-
+  #pragma mark Operators
+  
+  /**
+   * Unary minus; component-wise negation.
+   */
   template<typename T, std::size_t size>
   inline vec<T, size> operator -(const vec<T, size> &rhs) {
     vec<T, size> ret;
@@ -140,74 +135,64 @@ namespace p {
     return ret;
   }
 
-  template<typename T, std::size_t size, typename Scalar> 
-  inline vec<T, size> operator *(const vec<T, size> &lhs, Scalar rhs) {
-    vec<T, size> ret = transform(lhs, vec<T, size>(rhs), std::multiplies<T>());
-    return ret;
-  }
-
-  template<typename T, std::size_t size, typename Scalar> 
-  inline vec<T, size> operator /(const vec<T, size>& lhs, Scalar rhs) {
-    vec<T, size> ret = transform(lhs, vec<T, size>(rhs), std::divides<T>());
-    return ret;
-  }
-  
-  template<typename T, std::size_t size, typename Scalar> 
-  inline vec<T, size>& operator /=(vec<T, size>& lhs, Scalar rhs) {
-    lhs = lhs / vec<T, size>(rhs);
-    return lhs;
-  }
+  template<typename T, std::size_t size> 
+  inline vec<T, size> operator +(const vec<T, size> &lhs, const vec<T, size> &rhs) {return transform(lhs, rhs, std::plus<T>()); }
 
   template<typename T, std::size_t size> 
-  inline vec<T, size>& operator +=(vec<T, size>& lhs, const vec<T, size>& rhs) {
-    lhs = lhs + rhs;
-    return lhs;
-  }
+  inline vec<T, size> operator -(const vec<T, size>& lhs, const vec<T, size>& rhs) {return transform(lhs, rhs, std::minus<T>()); }
+
+  template<typename T, std::size_t size, typename Scalar> 
+  inline vec<T, size> operator *(const vec<T, size> &lhs, Scalar rhs) {return transform(lhs, vec<T, size>(rhs), std::multiplies<T>()); }
+
+  template<typename T, std::size_t size, typename Scalar> 
+  inline vec<T, size> operator /(const vec<T, size>& lhs, Scalar rhs) {return transform(lhs, vec<T, size>(rhs), std::divides<T>()); }
   
   template<typename T, std::size_t size> 
-  inline vec<T, size>& operator -=(vec<T, size>& lhs, const vec<T, size>& rhs) {
-    lhs = lhs - rhs;
-    return lhs;
-  }
-
+  inline vec<T, size>& operator +=(vec<T, size>& lhs, const vec<T, size>& rhs) {lhs = lhs + rhs; return lhs; }
   
-  // some more helpers
-  template<typename T>
-  struct min_fun {
-    T operator()(T lhs, T rhs) const {using std::min; return min(lhs, rhs); }
-  };
+  template<typename T, std::size_t size> 
+  inline vec<T, size>& operator -=(vec<T, size>& lhs, const vec<T, size>& rhs) {lhs = lhs - rhs; return lhs; }
 
-  template<typename T>
-  struct max_fun {
-    T operator()(T lhs, T rhs) const {using std::max; return max(lhs, rhs); }
-  };
+  template<typename T, std::size_t size, typename Scalar> 
+  inline vec<T, size>& operator *=(vec<T, size>& lhs, Scalar rhs) {lhs = lhs * vec<T, size>(rhs); return lhs; }
 
+  template<typename T, std::size_t size, typename Scalar> 
+  inline vec<T, size>& operator /=(vec<T, size>& lhs, Scalar rhs) {lhs = lhs / vec<T, size>(rhs); return lhs; }
+  
+  // TODO: some conversions might be nice; truncate..., also, composing vectors together:
+  //       vec<T, 4> color(original, 0.5)
   
   // algorithm overloads
-  #pragma mark - Algorithms
+  #pragma mark Algorithms
 
+  /**
+   * Component-wise minimum.
+   */
   template<typename T, std::size_t size>
-  inline vec<T, size> min(const vec<T, size> &v1, const vec<T, size> &v2) {
-    vec<T, size> ret = transform(v1, v2, min_fun<T>());
-    return ret;
-  }
+  inline vec<T, size> min(const vec<T, size> &v1, const vec<T, size> &v2) {return transform(v1, v2, min_fun<T>()); }
 
+  /**
+   * Component-wise maximum.
+   */
   template<typename T, std::size_t size>
-  inline vec<T, size> max(const vec<T, size> &v1, const vec<T, size> &v2) {
-    vec<T, size> ret = transform(v1, v2, max_fun<T>());
-    return ret;
-  }
+  inline vec<T, size> max(const vec<T, size> &v1, const vec<T, size> &v2) {return transform(v1, v2, max_fun<T>()); }
 
   
   template<typename T, std::size_t size>
   inline T dot_product(const vec<T, size> &v1, const vec<T, size> &v2) {
-    return std::inner_product(v1.components, v1.components + size, v2.components, T(0));
+    return std::inner_product(v1.components, v1.components + size, v2.components, T());
   }
   
+  template<typename T>
+  inline vec<T, 3> cross_product(const vec<T, 3> &v1, const vec<T, 3> &v2) {
+    return vec<T, 3>(v1.y * v2.z - v2.y * v1.z,
+                     v1.z * v2.x - v2.z * v1.x,
+                     v1.x * v2.y - v2.x * v1.y);
+  }
   
   template<typename T, std::size_t size>
   inline T magnitude(const vec<T, size> &v) {
-    T sumSquared = std::inner_product(v.components, v.components + size, v.components, T(0));
+    T sumSquared = dot_product(v, v);
     return sqrt(sumSquared);
   }
   
@@ -223,6 +208,7 @@ namespace p {
     return ret;
   }
 
+  #pragma mark Types for usage  
   typedef vec<float, 2> vec2;
   typedef vec<float, 3> vec3;
   typedef vec<float, 4> vec4;
@@ -231,10 +217,7 @@ namespace p {
   typedef vec<int, 4> ivec4;
   typedef vec<unsigned char, 3> ubvec3;
   typedef vec<unsigned char, 4> ubvec4;
-
-  // TODO: color
-  
 } // !p
 
-#endif // !UTILS_VECTOR_H
+#endif // !P_UTILS_VECTOR_H
 

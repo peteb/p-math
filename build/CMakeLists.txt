@@ -43,4 +43,5 @@ add_custom_target(clean-gen
 # some compiler flags. would be better to have them somewhere else..
 if(CMAKE_COMPILER_IS_GNUCXX)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
+  set(CMAKE_CC_FLAGS "${CMAKE_CC_FLAGS} -Wall -Wextra")
 endif(CMAKE_COMPILER_IS_GNUCXX)

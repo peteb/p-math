@@ -1,4 +1,5 @@
 #include <utils/vector.h>
+#include <utils/vector_stream.h>
 #include <utils/algorithm.h>
 #include <gtest/gtest.h>
 
@@ -21,6 +22,7 @@ TEST(utils_vector, mul) {
 TEST(utils_vector, negation) {
   vec3 v(1.0f, 2.0f, 3.0f);
   vec3 v2 = -v;
+  
   EXPECT_FLOAT_EQ(-1.0f, v2.x);
   EXPECT_FLOAT_EQ(-2.0f, v2.y);
   EXPECT_FLOAT_EQ(-3.0f, v2.z);
@@ -128,6 +130,9 @@ TEST(utils_vector, string) {
   ss << v;
   EXPECT_STREQ(ss.str().c_str(), "3, 2, 1.5");  
 }
+
+
+// TODO: performance tests, crossproduct
 
 // TODO: vec2, vec3, vec4 truncate
 
