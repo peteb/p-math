@@ -10,8 +10,6 @@
 #include <numeric>
 #include <memory>
 
-#include "algorithm.h"
-
 // TODO: add header here for some simple use cases
 
 
