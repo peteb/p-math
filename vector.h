@@ -1,4 +1,9 @@
-// -*- c++ -*-
+/* -- vector.h -------------------------------------------------------*- c++ -*-
+ *
+ * Operations that can be done on vectors:
+ *   - + * / += -= *= /= min max transform dot_product cross_product normalize
+ *   magnitude normalized
+ * -------------------------------------------------------------------------- */
 
 #ifndef P_UTILS_VECTOR_H
 #define P_UTILS_VECTOR_H
@@ -9,9 +14,7 @@
 #include <cmath>
 #include <numeric>
 #include <memory>
-
-// TODO: add header here for some simple use cases
-
+#include <cstring>
 
 namespace p {
   // TODO: make sure clamp, lerp, etc. work with vectors
@@ -36,7 +39,7 @@ namespace p {
    * Bottom type.
    */
   template<typename T>
-  struct vec<T, 0> {private: vec() {}};
+  struct vec<T, 0> {private: vec();};
   
   /**
    * Specialization of vector for 2 components, which must be POD type.
@@ -54,9 +57,9 @@ namespace p {
     typedef T value_type;
 
     union {
-      struct {T x, y; };
-      struct {T u, v; };
-      struct {T components[2]; };
+      struct {T x, y;};
+      struct {T u, v;};
+      struct {T components[2];};
     };
   };
   
@@ -77,10 +80,10 @@ namespace p {
     typedef T value_type;
 
     union {
-      struct {T x, y, z; };
-      struct {T s, t, p; };
-      struct {T r, g, b; };
-      struct {T components[3]; };
+      struct {T x, y, z;};
+      struct {T s, t, p;};
+      struct {T r, g, b;};
+      struct {T components[3];};
     };
   };
 
