@@ -6,11 +6,11 @@ Usage should be simple; just copy the header file you need into your
 project. You don't have to compile or link anything.
 
 Copyrights
-==========
+----------
 Basically quite open. You can use it in closed and open source, for commercial
 use or for free. You can't sell this software directly, nor can you use my name
 for modifications you've done.
         
 Testing
-=======
+-------
 cd unittest && cmake . && make run-unittest
