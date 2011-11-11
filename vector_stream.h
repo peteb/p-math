@@ -148,7 +148,7 @@ namespace p {
       // TODO: this shouldn't be here... make a color_writer
       std::stringstream ss;
       ss << "0x" << std::hex;
-      for (std::size_t i = size-1; i--; ) {
+      for (std::size_t i = size; i--; ) {
         double fraction = v[i] / double(detail::color_limits<T>::max());
         ss << int(fraction * 255.0);
       }
