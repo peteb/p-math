@@ -11,15 +11,6 @@ Basically quite open. You can use it in closed and open source, for commercial
 use or for free. You can't sell this software directly, nor can you use my name
 for modifications you've done.
         
-Building
-========
-cd build && cmake . -DTARGET=<TARGET> && make
-
-<TARGET> can be any of:
-  * tests -- create buildsystem for all generic non-implementation tests
-   
-The build system is tweaked for Xcode and Makefiles, so go ahead and test
-them :)
-
-
-
+Testing
+=======
+cd unittest && cmake . && make run-unittest
