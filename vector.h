@@ -1,5 +1,13 @@
 /* -- vector.h -------------------------------------------------------*- c++ -*-
  *
+ * Accessing components
+ *   through []-operator
+ *   copying vector memory to buffer
+ *   .x/.r/.s
+ *   .y/.g/.t
+ *   .z/.b/.p
+ *   .w/.a/.q
+ *
  * Operations that can be done on vectors:
  *   - + * / += -= *= /= min max transform dot_product cross_product normalize
  *   magnitude normalized
@@ -58,7 +66,7 @@ namespace p {
 
     union {
       struct {T x, y;};
-      struct {T u, v;};
+      struct {T s, t;};
       struct {T components[2];};
     };
   };
