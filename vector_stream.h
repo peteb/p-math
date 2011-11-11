@@ -1,4 +1,26 @@
-// -*- c++ -*-
+/* -- vector_stream.h ------------------------------------------------*- c++ -*-
+ * Functionality for writing and reading vector classes to/from streams.
+ * The text format for vectors are the values of the components adjoined by
+ * whitespace (' ') characters.
+ * 
+ * When reading from a stream to a vector, some special keyword values are
+ * reserved:
+ *   null, zero - all components are zeroed
+ * When reading into a vector through a p::color_reader:
+ *   red - first component is maximum, others are 0
+ * p::color_reader can also parse hexadecimal colors in the form of
+ * "0xRRGGBBAA".
+ * 
+ * If parsing fails, the fail bit will be set.
+ * 
+ * Vectors:
+ * out() << vec3(13.2f, 32.0f, -1.0f) // => "13.2 32.0 -1.0"
+ *
+ * Colors:
+ * vec3 color;
+ * in() >> p::color_reader(color);
+ *
+ * -------------------------------------------------------------------------- */
 
 #ifndef P_VECTOR_STREAM_H 
 #define P_VECTOR_STREAM_H
@@ -11,25 +33,6 @@
 #include <sstream>
 
 #include "vector.h"
-
-
-/*
- om man skriver till en vec<T, N> så kan den hantera identity och null, samt v1 :: T[v2 :: T .. vN]
- negativa och positiva tal, samt 0.
- 
- en color skulle kunna ta in data som hex också.
- s >> color_reader(vec)
- 
- istream &s;
- vec ret;
- if (s >> vec_reader(ret, COLOR)) {
- ...
- }
- 
- if (optional<vec3> vec = parse_color("#FF00FFAA")) {
- }
- */
-#include <iostream>
 
 namespace p {
   namespace detail {
@@ -131,9 +134,11 @@ namespace p {
   detail::color_reader_impl<T, size> color_reader(vec<T, size> &target) {
     return detail::color_reader_impl<T, size>(target);
   }
+
+  // TODO: color_writer
   
   /**
-   * Output a vector in the format x[, y[, z[...]]] unless std::hex has
+   * Output a vector in the format x[ y[ z[...]]] unless std::hex has
    * been set on the stream.
    * For example, "123, 43".
    */
@@ -161,7 +166,7 @@ namespace p {
     
       s << text_rep(v[0]);
       for (std::size_t i = 1; i < size; ++i)
-        s << ", " << text_rep(v[i]);
+        s << " " << text_rep(v[i]);
     }
     
     return s;  

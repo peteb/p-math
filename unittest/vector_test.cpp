@@ -128,7 +128,7 @@ TEST(utils_vector, string) {
   vec3 v(3.0f, 2.0f, 1.5f);
   std::stringstream ss;
   ss << v;
-  EXPECT_STREQ(ss.str().c_str(), "3, 2, 1.5");  
+  EXPECT_STREQ(ss.str().c_str(), "3 2 1.5");  
 }
 
 TEST(utils_vector, parse) {
