@@ -1,6 +1,6 @@
-#include <utils/vector.h>
-#include <utils/vector_stream.h>
-#include <utils/algorithm.h>
+#include "vector.h"
+#include "vector_stream.h"
+#include "algorithm.h"
 #include <gtest/gtest.h>
 
 #include <string>
