@@ -10,7 +10,7 @@
 #include <numeric>
 #include <memory>
 
-#include <utils/algorithm.h>
+#include "algorithm.h"
 
 // TODO: add header here for some simple use cases
 
