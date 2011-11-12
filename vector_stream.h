@@ -41,7 +41,8 @@ namespace p {
     struct textual_rep {typedef T type;};
     template<> struct textual_rep<unsigned char> {typedef int type;};
     template<> struct textual_rep<signed char> {typedef int type;};
-    
+
+	// TODO: const char* instead
     bool stricmp(const std::string &s1, const std::string &s2) {
       if (s1.size() != s2.size())
         return false;
@@ -93,6 +94,7 @@ namespace p {
           
           std::string textual;
           if (s >> textual) {
+			// TODO: handle whitespace in textual?
             if (stricmp(textual, "red")) {
               set_all_but(target, 0);
               target[0] = color_limits<T>::max();
@@ -101,7 +103,7 @@ namespace p {
             else if (textual.size() > 2 && textual[0] == '0' && textual[1] == 'x') {
               // parse it as hex
               unsigned long val = std::strtoul(textual.c_str(), NULL, 16);
-              for (int i = size - 1; i >= 0; --i) {
+              for (std::size_t i = size; i--; ) {
                 target[i] = ((val & 0xFF) / 255.0) * color_limits<T>::max();
                 val >>= 8;
               }
@@ -171,6 +173,8 @@ namespace p {
     
     return s;  
   }  
+  
+  //streamstate(s)
   
   /**
    * Read a generic vector from a stream. Also supports
