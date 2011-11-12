@@ -68,8 +68,20 @@ namespace p {
     template<> struct color_limits<float> {static inline float max() {return 1.0f;} };
     template<> struct color_limits<double> {static inline double max() {return 1.0;} };
 
-
-    /**
+	/**
+	 * A class that can store the state of a stream and revert to that state.
+	 */
+	template<typename Stream>
+	class streamstate {
+	  const std::streampos startPos;
+	  const std::ios::iostate startState;
+	  
+	public:
+	  streamstate(Stream &s) : startPos(s.tellg()), startState(s.rdstate()) {}
+	  void reset(Stream &s) const {s.clear(startState); s.seekg(startPos); }
+	};
+	
+	/**
      * Parsing helping class for reading colors from stream.
      * Should be created with p::color_reader.
      */
@@ -83,12 +95,10 @@ namespace p {
       
       template<typename InStream>
       InStream &read(InStream &s) const {
-        const std::streampos startPos = s.tellg();
-        const std::ios::iostate startState = s.rdstate();
+		const streamstate<InStream> start(s);
         
         if (!(s >> target)) {
-          s.clear(startState);
-          s.seekg(startPos);
+		  start.reset(s);
           
           std::string textual;
           if (s >> textual) {
@@ -172,17 +182,14 @@ namespace p {
     return s;  
   }  
   
-  //streamstate(s)
-  
   /**
    * Read a generic vector from a stream. Also supports
    * special values 'null'/'zero' for a vector with 0 length.
    */
   template<typename T, std::size_t size, typename InStream>
   InStream &operator >>(InStream &s, vec<T, size> &v) {
-    const std::streampos startPos = s.tellg();
-    const std::ios::iostate startState = s.rdstate();
-    
+    const detail::streamstate<InStream> start(s);
+	
     if (s >> v.components[0]) {
       for (std::size_t i = 1; i < size && s.good(); ++i) {
         typename detail::textual_rep<T>::type tmp;
@@ -193,8 +200,7 @@ namespace p {
     else {
       // it seems we can't parse it as a native type of the vector,
       // so we parse it as a string.
-      s.clear(startState);
-      s.seekg(startPos);
+	  start.reset(s);
       std::string textual;
       
       if (s >> textual) {
