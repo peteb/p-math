@@ -10,7 +10,7 @@
  *
  * Operations that can be done on vectors:
  *   - + * / += -= *= /= min max transform dot_product cross_product normalize
- *   magnitude normalized
+ *   magnitude
  * -------------------------------------------------------------------------- */
 
 #ifndef P_UTILS_VECTOR_H
@@ -216,12 +216,7 @@ namespace p {
   
   // very generic normalize function
   template<typename T>
-  inline void normalize(T &v) {
-    v /= magnitude(v);
-  }
-
-  template<typename T>
-  inline T normalized(const T &v) {
+  inline T normalize(const T &v) {
     T ret = v / magnitude(v);
     return ret;
   }

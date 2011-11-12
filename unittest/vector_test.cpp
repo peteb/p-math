@@ -86,6 +86,8 @@ TEST(utils_vector, lerp) {
   
 }
 
+// TODO: benchmark
+
 TEST(utils_vector, dotproduct) {
   using p::dot_product;
 
@@ -112,9 +114,9 @@ TEST(utils_vector, normalize) {
   
   {
     vec2 v1(0.0f, 2.0f);
-    normalize(v1);
-    EXPECT_FLOAT_EQ(0.0f, v1.x);
-    EXPECT_FLOAT_EQ(1.0f, v1.y);
+    vec2 n = normalize(v1);
+    EXPECT_FLOAT_EQ(0.0f, n.x);
+    EXPECT_FLOAT_EQ(1.0f, n.y);
     // TODO: some more tests for vec2
   }
   
@@ -191,6 +193,7 @@ TEST(utils_vector, color_print) {
   }
 
 }
+
 // TODO: performance tests, crossproduct
 
 // TODO: vec2, vec3, vec4 truncate
