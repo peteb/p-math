@@ -42,15 +42,13 @@ namespace p {
     template<> struct textual_rep<unsigned char> {typedef int type;};
     template<> struct textual_rep<signed char> {typedef int type;};
 
-	// TODO: const char* instead
-    bool stricmp(const std::string &s1, const std::string &s2) {
-      if (s1.size() != s2.size())
-        return false;
-      
-      for (std::string::size_type i = 0; i < s1.size(); ++i) {
-        if (std::tolower(s1[i]) != std::tolower(s2[i]))
-          return false;
-      }
+    bool stricmp(const char *s1, const char *s2) {
+	  std::size_t i = 0;
+	  do {
+		if (std::tolower(s1[i]) != std::tolower(s2[i]))
+		  return false;
+		++i;
+	  } while (s1[i] && s2[i]);
 
       return true;
     }
@@ -95,7 +93,7 @@ namespace p {
           std::string textual;
           if (s >> textual) {
 			// TODO: handle whitespace in textual?
-            if (stricmp(textual, "red")) {
+            if (stricmp(textual.c_str(), "red")) {
               set_all_but(target, 0);
               target[0] = color_limits<T>::max();
             }
@@ -201,7 +199,7 @@ namespace p {
       
       if (s >> textual) {
         using detail::stricmp;
-        if (stricmp(textual, "null") || stricmp(textual, "zero")) {
+        if (stricmp(textual.c_str(), "null") || stricmp(textual.c_str(), "zero")) {
           for (std::size_t i = 0; i < size; ++i)
             v[i] = T();
         }
