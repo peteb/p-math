@@ -43,16 +43,16 @@ namespace p {
     template<> struct textual_rep<signed char> {typedef int type;};
 
     bool stricmp(const char *s1, const char *s2) {
-	  std::size_t i = 0;
-	  do {
-		if (std::tolower(s1[i]) != std::tolower(s2[i]))
-		  return false;
-		++i;
-	  } while (s1[i] && s2[i]);
-
+      std::size_t i = 0;
+      do {
+        if (std::tolower(s1[i]) != std::tolower(s2[i]))
+          return false;
+        ++i;
+      } while (s1[i] && s2[i]);
+      
       return true;
     }
-
+	
     template<typename T, std::size_t size>
     void set_all_but(vec<T, size> &vector, std::size_t ignore, T value = T()) {
       for (std::size_t i = 0; i < size; ++i) {
@@ -73,12 +73,12 @@ namespace p {
 	 */
 	template<typename Stream>
 	class streamstate {
-	  const std::streampos startPos;
-	  const std::ios::iostate startState;
-	  
-	public:
-	  streamstate(Stream &s) : startPos(s.tellg()), startState(s.rdstate()) {}
-	  void reset(Stream &s) const {s.clear(startState); s.seekg(startPos); }
+      const std::streampos startPos;
+      const std::ios::iostate startState;
+      
+    public:
+      streamstate(Stream &s) : startPos(s.tellg()), startState(s.rdstate()) {}
+      void reset(Stream &s) const {s.clear(startState); s.seekg(startPos); }
 	};
 	
 	/**
@@ -95,14 +95,14 @@ namespace p {
       
       template<typename InStream>
       InStream &read(InStream &s) const {
-		const streamstate<InStream> start(s);
+        const streamstate<InStream> start(s);
         
         if (!(s >> target)) {
-		  start.reset(s);
+          start.reset(s);
           
           std::string textual;
           if (s >> textual) {
-			// TODO: handle whitespace in textual?
+            // TODO: handle whitespace in textual?
             if (stricmp(textual.c_str(), "red")) {
               set_all_but(target, 0);
               target[0] = color_limits<T>::max();
@@ -189,7 +189,7 @@ namespace p {
   template<typename T, std::size_t size, typename InStream>
   InStream &operator >>(InStream &s, vec<T, size> &v) {
     const detail::streamstate<InStream> start(s);
-	
+    
     if (s >> v.components[0]) {
       for (std::size_t i = 1; i < size && s.good(); ++i) {
         typename detail::textual_rep<T>::type tmp;
@@ -200,7 +200,7 @@ namespace p {
     else {
       // it seems we can't parse it as a native type of the vector,
       // so we parse it as a string.
-	  start.reset(s);
+      start.reset(s);
       std::string textual;
       
       if (s >> textual) {
