@@ -70,6 +70,8 @@ namespace p {
 
     /**
      * A class that can store the state of an istream and revert to that state.
+     * It also wraps istream::sentry so you don't have to instantiate two helper
+     * classes.
      */
     template<typename Stream>
     class streamstate {
@@ -98,32 +100,35 @@ namespace p {
       template<typename InStream>
       InStream &read(InStream &s) const {
         streamstate<InStream> start(s);
-        if (start) {
-          if (!(s >> target)) {
-            start.reset(s);
-            
-            std::string textual;
-            if (s >> textual) {
-              // TODO: handle whitespace in textual?
-              if (stricmp(textual.c_str(), "red")) {
-                set_all_but(target, 0);
-                target[0] = color_limits<T>::max();
-              }
-              // ...
-              else if (textual.size() > 2 && textual[0] == '0' && textual[1] == 'x') {
-                // parse it as hex
-                unsigned long val = std::strtoul(textual.c_str(), NULL, 16);
-                for (std::size_t i = size; i--; ) {
-                  target[i] = ((val & 0xFF) / 255.0) * color_limits<T>::max();
-                  val >>= 8;
-                }
-              }
-              else {
-                s.clear(std::ios::failbit);
-              }
-            }
-          }
-        } // end of stream sentry
+        if (!start)
+		  return s;
+		
+		if (!(s >> target)) {
+		  start.reset(s);
+          
+		  std::string textual;
+		  if (s >> textual) {
+			// TODO: test with whitespace
+			// TODO: first try parsing as components
+			
+			if (stricmp(textual.c_str(), "red")) {
+			  set_all_but(target, 0);
+			  target[0] = color_limits<T>::max();
+			}
+			// ...
+			else if (textual.size() > 2 && textual[0] == '0' && textual[1] == 'x') {
+			  // parse it as hex
+			  unsigned long val = std::strtoul(textual.c_str(), NULL, 16);
+			  for (std::size_t i = size; i--; ) {
+				target[i] = ((val & 0xFF) / 255.0) * color_limits<T>::max();
+				val >>= 8;
+			  }
+			}
+			else {
+			  s.clear(std::ios::failbit);
+			}
+		  }
+		}
         
         return s;
       }
@@ -158,33 +163,34 @@ namespace p {
   template<typename T, std::size_t size>
   std::ostream &operator <<(std::ostream &s, const vec<T, size> &v) {
     const std::ostream::sentry sentry(s);
-    if (sentry) {
-      if (s.flags() & std::ios::hex) {
-        // TODO: this shouldn't be here... make a color_writer
-        std::stringstream ss;
-        ss << "0x" << std::hex;
-        for (std::size_t i = size; i--; ) {
-          double fraction = v[i] / double(detail::color_limits<T>::max());
-          ss << int(fraction * 255.0);
-        }
-        
-        // this safety is probably unnecessary. 
-        if (ss.good()) {
-          s << ss;
-        }
-        else {
-          s.clear(std::ios::failbit);
-        }
-      }
-      else {
-        typedef typename detail::textual_rep<T>::type text_rep;
-        
-        s << text_rep(v[0]);
-        for (std::size_t i = 1; i < size; ++i)
-          s << " " << text_rep(v[i]);
-      }
-    }
-    
+	if (!sentry)
+	  return s;
+	
+	if (s.flags() & std::ios::hex) {
+	  // TODO: this shouldn't be here... make a color_writer
+	  std::stringstream ss;
+	  ss << "0x" << std::hex;
+	  for (std::size_t i = size; i--; ) {
+		double fraction = v[i] / double(detail::color_limits<T>::max());
+		ss << int(fraction * 255.0);
+	  }
+      
+	  // this safety is probably unnecessary. 
+	  if (ss.good()) {
+		s << ss;
+	  }
+	  else {
+		s.clear(std::ios::failbit);
+	  }
+	}
+	else {
+	  typedef typename detail::textual_rep<T>::type text_rep;
+      
+	  s << text_rep(v[0]);
+	  for (std::size_t i = 1; i < size; ++i)
+		s << " " << text_rep(v[i]);
+	}
+  
     return s;  
   }  
   
@@ -195,33 +201,34 @@ namespace p {
   template<typename T, std::size_t size, typename InStream>
   InStream &operator >>(InStream &s, vec<T, size> &v) {
     const detail::streamstate<InStream> start(s);
-    if (start) {
-      if (s >> v.components[0]) {
-        for (std::size_t i = 1; i < size && s.good(); ++i) {
-          typename detail::textual_rep<T>::type tmp;
-          s >> tmp;
-          v[i] = tmp;
-        }
-      }
-      else {
-        // it seems we can't parse it as a native type of the vector,
-        // so we parse it as a string.
-        start.reset(s);
-        std::string textual;
-        
-        if (s >> textual) {
-          using detail::stricmp;
-          if (stricmp(textual.c_str(), "null") || stricmp(textual.c_str(), "zero")) {
-            for (std::size_t i = 0; i < size; ++i)
-              v[i] = T();
-          }
-          else {
-            s.clear(std::ios::failbit);
-          }
-        }
-      }
-    } // end of stream sentry
-    
+	if (!start)
+	  return s;
+	
+	if (s >> v.components[0]) {
+	  for (std::size_t i = 1; i < size && s.good(); ++i) {
+		typename detail::textual_rep<T>::type tmp;
+		s >> tmp;
+		v[i] = tmp;
+	  }
+	}
+	else {
+	  // it seems we can't parse it as a native type of the vector,
+	  // so we parse it as a string.
+	  start.reset(s);
+	  std::string textual;
+      
+	  if (s >> textual) {
+		using detail::stricmp;
+		if (stricmp(textual.c_str(), "null") || stricmp(textual.c_str(), "zero")) {
+		  for (std::size_t i = 0; i < size; ++i)
+			v[i] = T();
+		}
+		else {
+		  s.clear(std::ios::failbit);
+		}
+	  }
+	}
+  
     return s;
   }
   
