@@ -97,17 +97,17 @@ namespace p {
       {
       }
       
-      template<typename InStream>
-      InStream &read(InStream &s) const {
-        streamstate<InStream> start(s);
+      template<typename streamT>
+      streamT &read(streamT &is) const {
+        streamstate<streamT> start(is);
         if (!start)
-		  return s;
+		  return is;
 		
-		if (!(s >> target)) {
-		  start.reset(s);
+		if (!(is >> target)) {
+		  start.reset(is);
           
 		  std::string textual;
-		  if (s >> textual) {
+		  if (is >> textual) {
 			// TODO: test with whitespace
 			// TODO: first try parsing as components
 			
@@ -125,17 +125,23 @@ namespace p {
 			  }
 			}
 			else {
-			  s.clear(std::ios::failbit);
+			  is.clear(std::ios::failbit);
 			}
 		  }
 		}
         
-        return s;
+        return is;
       }
       
     private:
       vec<T, size> &target;
     };
+
+	template<class charT, class traits>
+	std::basic_ostream<charT, traits> &fail(std::basic_ostream<charT, traits> &os) {
+	  os.clear(std::ios::failbit);
+	  return os;
+	}
   } // !detail
   
   
@@ -175,13 +181,8 @@ namespace p {
 		ss << int(fraction * 255.0);
 	  }
       
-	  // this safety is probably unnecessary. 
-	  if (ss.good()) {
-		s << ss;
-	  }
-	  else {
-		s.clear(std::ios::failbit);
-	  }
+	  // this safety is probably unnecessary.
+	  s << (ss ? ss : detail::fail(s));
 	}
 	else {
 	  typedef typename detail::textual_rep<T>::type text_rep;
