@@ -26,20 +26,19 @@
 
 namespace p {
   // TODO: make sure clamp, lerp, etc. work with vectors
-  
   #pragma mark Basic vector types
 
   /**
    * The general case.
    */
-  template<typename T, std::size_t size>
+  template<typename T, std::size_t sizeV>
   struct vec {
-    vec() {}
-    explicit vec(T val) {std::uninitialized_fill(components, components + size, val);}
-    explicit vec(T *values) {std::uninitialized_copy(values, values + size, components);}
-    
     typedef T value_type;
+    enum {size = sizeV};
     
+    explicit vec() {}
+    explicit vec(T val) {std::fill(components, components + size, val);}
+       
     T components[size];
   };
 
@@ -54,20 +53,20 @@ namespace p {
    */
   template<typename T>
   struct vec<T, 2> {
-    vec() {}
+    typedef T value_type;
+    enum {size = 2};
+    
+    explicit vec() {}
     explicit vec(T x, T y) : x(x), y(y) {}
-    explicit vec(T val) {std::uninitialized_fill(components, components + 2, val);}
-    explicit vec(T *values) {std::uninitialized_copy(values, values + 2, components);}
+    explicit vec(T val) {std::fill(components, components + size, val);}
 
     inline T &operator [](std::size_t pos) {return components[pos];}
     inline T operator [](std::size_t pos) const {return components[pos];}
 
-    typedef T value_type;
-
     union {
-      struct {T x, y;};
-      struct {T s, t;};
-      struct {T components[2];};
+      struct {T x, y; };
+      struct {T s, t; };
+      struct {T components[size]; };
     };
   };
   
@@ -77,21 +76,22 @@ namespace p {
    */
   template<typename T>
   struct vec<T, 3> {
-    vec() {}
+    typedef T value_type;
+    enum {size = 3};
+
+    explicit vec() {}
     explicit vec(T x, T y, T z) : x(x), y(y), z(z) {}
-    explicit vec(T val) {std::uninitialized_fill(components, components + 3, val);}
-    explicit vec(T *values) {std::uninitialized_copy(values, values + 3, components);}
+    explicit vec(T val) {std::fill(components, components + size, val);}
 
     inline T &operator [](std::size_t pos) {return components[pos];}
     inline T operator [](std::size_t pos) const {return components[pos];}
 
-    typedef T value_type;
 
     union {
-      struct {T x, y, z;};
-      struct {T s, t, p;};
-      struct {T r, g, b;};
-      struct {T components[3];};
+      struct {T x, y, z; };
+      struct {T s, t, p; };
+      struct {T r, g, b; };
+      struct {T components[size]; };
     };
   };
 
@@ -100,21 +100,21 @@ namespace p {
    */
   template<typename T>
   struct vec<T, 4> {
-    vec() {}
+    typedef T value_type;
+    enum {size = 4};
+    
+    explicit vec() {}
     explicit vec(T x, T y, T z, T w) : x(x), y(y), z(z), w(w) {}
-    explicit vec(T val) {std::uninitialized_fill(components, components + 4, val);}
-    explicit vec(T *values) {std::uninitialized_copy(values, values + 4, components);}
+    explicit vec(T val) {std::fill(components, components + size, val);}
 
     inline T &operator [](std::size_t pos) {return components[pos];}
     inline T operator [](std::size_t pos) const {return components[pos];}
-
-    typedef T value_type;
 
     union {
       struct {T x, y, z, w; };
       struct {T s, t, p, q; };
       struct {T r, g, b, a; };
-      struct {T components[4]; };
+      struct {T components[size]; };
     };    
   };
 
