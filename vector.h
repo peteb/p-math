@@ -129,10 +129,12 @@ namespace p {
   
   #pragma mark Helpers
     
-  template<typename T, std::size_t size, typename OpT>
-  inline vec<T, size> transform(const vec<T, size> &lhs, const vec<T, size> &rhs, OpT op) {
+  template<typename T, std::size_t size, typename opT>
+  inline vec<T, size> transform(const vec<T, size> &lhs,
+                                const vec<T, size> &rhs, opT op) {
     vec<T, size> ret;
-    std::transform(lhs.components, lhs.components + size, rhs.components, ret.components, op);
+    std::transform(lhs.components, lhs.components + size,
+                   rhs.components, ret.components, op);
     return ret;
   }
   
@@ -162,28 +164,46 @@ namespace p {
   }
 
   template<typename T, std::size_t size> 
-  inline vec<T, size> operator +(const vec<T, size> &lhs, const vec<T, size> &rhs) {return transform(lhs, rhs, std::plus<T>()); }
+  inline vec<T, size> operator +(const vec<T, size> &lhs,
+                                 const vec<T, size> &rhs) {
+    return transform(lhs, rhs, std::plus<T>());
+  }
 
   template<typename T, std::size_t size> 
-  inline vec<T, size> operator -(const vec<T, size>& lhs, const vec<T, size>& rhs) {return transform(lhs, rhs, std::minus<T>()); }
+  inline vec<T, size> operator -(const vec<T, size>& lhs,
+                                 const vec<T, size>& rhs) {
+    return transform(lhs, rhs, std::minus<T>());
+  }
 
-  template<typename T, std::size_t size, typename Scalar> 
-  inline vec<T, size> operator *(const vec<T, size> &lhs, Scalar rhs) {return transform(lhs, vec<T, size>(rhs), std::multiplies<T>()); }
+  template<typename T, std::size_t size, typename scalarT> 
+  inline vec<T, size> operator *(const vec<T, size> &lhs, scalarT rhs) {
+    return transform(lhs, vec<T, size>(rhs), std::multiplies<T>());
+  }
 
-  template<typename T, std::size_t size, typename Scalar> 
-  inline vec<T, size> operator /(const vec<T, size>& lhs, Scalar rhs) {return transform(lhs, vec<T, size>(rhs), std::divides<T>()); }
+  template<typename T, std::size_t size, typename scalarT> 
+  inline vec<T, size> operator /(const vec<T, size>& lhs, scalarT rhs) {
+    return transform(lhs, vec<T, size>(rhs), std::divides<T>());
+  }
   
   template<typename T, std::size_t size> 
-  inline vec<T, size>& operator +=(vec<T, size>& lhs, const vec<T, size>& rhs) {lhs = lhs + rhs; return lhs; }
+  inline vec<T, size>& operator +=(vec<T, size>& lhs, const vec<T, size>& rhs) {
+    lhs = lhs + rhs; return lhs;
+  }
   
   template<typename T, std::size_t size> 
-  inline vec<T, size>& operator -=(vec<T, size>& lhs, const vec<T, size>& rhs) {lhs = lhs - rhs; return lhs; }
+  inline vec<T, size>& operator -=(vec<T, size>& lhs, const vec<T, size>& rhs) {
+    lhs = lhs - rhs; return lhs;
+  }
 
-  template<typename T, std::size_t size, typename Scalar> 
-  inline vec<T, size>& operator *=(vec<T, size>& lhs, Scalar rhs) {lhs = lhs * vec<T, size>(rhs); return lhs; }
+  template<typename T, std::size_t size, typename scalarT> 
+  inline vec<T, size>& operator *=(vec<T, size>& lhs, scalarT rhs) {
+    lhs = lhs * vec<T, size>(rhs); return lhs;
+  }
 
-  template<typename T, std::size_t size, typename Scalar> 
-  inline vec<T, size>& operator /=(vec<T, size>& lhs, Scalar rhs) {lhs = lhs / vec<T, size>(rhs); return lhs; }
+  template<typename T, std::size_t size, typename scalarT> 
+  inline vec<T, size>& operator /=(vec<T, size>& lhs, scalarT rhs) {
+    lhs = lhs / vec<T, size>(rhs); return lhs;
+  }
   
   // TODO: some conversions might be nice; truncate..., also, composing vectors together:
   //       vec<T, 4> color(original, 0.5)
@@ -195,13 +215,17 @@ namespace p {
    * Component-wise minimum.
    */
   template<typename T, std::size_t size>
-  inline vec<T, size> min(const vec<T, size> &v1, const vec<T, size> &v2) {return transform(v1, v2, min_fun<T>()); }
+  inline vec<T, size> min(const vec<T, size> &v1, const vec<T, size> &v2) {
+    return transform(v1, v2, min_fun<T>());
+  }
 
   /**
    * Component-wise maximum.
    */
   template<typename T, std::size_t size>
-  inline vec<T, size> max(const vec<T, size> &v1, const vec<T, size> &v2) {return transform(v1, v2, max_fun<T>()); }
+  inline vec<T, size> max(const vec<T, size> &v1, const vec<T, size> &v2) {
+    return transform(v1, v2, max_fun<T>());
+  }
 
   
   template<typename T, std::size_t size>
