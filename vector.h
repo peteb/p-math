@@ -27,7 +27,7 @@
 namespace p {
   // TODO: make sure clamp, lerp, etc. work with vectors
   #pragma mark Basic vector types
-
+  
   /**
    * The general case.
    */
@@ -37,11 +37,13 @@ namespace p {
     enum {size = sizeV};
     
     explicit vec() {}
-    explicit vec(T val) {std::fill(components, components + size, val);}
+    explicit vec(T val) {
+      std::uninitialized_fill(components, components + size, val);
+    }
        
     T components[size];
   };
-
+  
   /**
    * Bottom type.
    */
@@ -58,11 +60,13 @@ namespace p {
     
     explicit vec() {}
     explicit vec(T x, T y) : x(x), y(y) {}
-    explicit vec(T val) {std::fill(components, components + size, val);}
-
+    explicit vec(T val) {
+      std::uninitialized_fill(components, components + size, val);
+    }
+    
     inline T &operator [](std::size_t pos) {return components[pos];}
     inline T operator [](std::size_t pos) const {return components[pos];}
-
+    
     union {
       struct {T x, y; };
       struct {T s, t; };
@@ -81,7 +85,9 @@ namespace p {
 
     explicit vec() {}
     explicit vec(T x, T y, T z) : x(x), y(y), z(z) {}
-    explicit vec(T val) {std::fill(components, components + size, val);}
+    explicit vec(T val) {
+      std::uninitialized_fill(components, components + size, val);
+    }
 
     inline T &operator [](std::size_t pos) {return components[pos];}
     inline T operator [](std::size_t pos) const {return components[pos];}
@@ -94,7 +100,7 @@ namespace p {
       struct {T components[size]; };
     };
   };
-
+  
   /**
    * Specialization of vector for 4 components, which must be POD type.
    */
@@ -105,11 +111,13 @@ namespace p {
     
     explicit vec() {}
     explicit vec(T x, T y, T z, T w) : x(x), y(y), z(z), w(w) {}
-    explicit vec(T val) {std::fill(components, components + size, val);}
-
+    explicit vec(T val) {
+      std::uninitialized_fill(components, components + size, val);
+    }
+    
     inline T &operator [](std::size_t pos) {return components[pos];}
     inline T operator [](std::size_t pos) const {return components[pos];}
-
+    
     union {
       struct {T x, y, z, w; };
       struct {T s, t, p, q; };
@@ -117,7 +125,7 @@ namespace p {
       struct {T components[size]; };
     };    
   };
-
+  
   
   #pragma mark Helpers
     
@@ -137,9 +145,9 @@ namespace p {
   struct max_fun {
     T operator()(T lhs, T rhs) const {using std::max; return max(lhs, rhs); }
   };
-
-
-
+  
+  
+  
   #pragma mark Operators
   
   /**
