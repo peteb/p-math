@@ -91,6 +91,12 @@ namespace p {
       void reset(istreamT &s) const {s.clear(startState); s.seekg(startPos); }
       operator const void *() const {return (sentry ? this : 0); }
     };
+
+    template<class charT, class traits>
+    std::basic_ostream<charT, traits> &fail(std::basic_ostream<charT, traits> &os) {
+      os.clear(std::ios::failbit);
+      return os;
+    }
     
     /**
      * Parsing helping class for reading colors from stream.
@@ -106,7 +112,7 @@ namespace p {
       
       template<typename streamT>
       streamT &read(streamT &is) const {
-        streamstate<streamT> start(is);
+        const streamstate<streamT> start(is);
         if (!start)
           return is;
         
@@ -133,7 +139,7 @@ namespace p {
               }
             }
             else {
-              is.clear(std::ios::failbit);
+              fail(is);
             }
           }
         }
@@ -145,11 +151,6 @@ namespace p {
       vec<T, size> &target;
     };
 
-    template<class charT, class traits>
-    std::basic_ostream<charT, traits> &fail(std::basic_ostream<charT, traits> &os) {
-      os.clear(std::ios::failbit);
-      return os;
-    }
   } // !detail
   
   
