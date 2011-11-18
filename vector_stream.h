@@ -64,24 +64,31 @@ namespace p {
     
     // color limits; 1.0 = max for floats/doubles, 255 = max for uchar, etc.
     template<typename T>
-    struct color_limits {static inline T max() {return std::numeric_limits<T>::max();} };
-    template<> struct color_limits<float> {static inline float max() {return 1.0f;} };
-    template<> struct color_limits<double> {static inline double max() {return 1.0;} };
+    struct color_limits {
+      static inline T max() {return std::numeric_limits<T>::max();}
+    };
+    template<> struct color_limits<float> {
+      static inline float max() {return 1.0f;}
+    };
+    template<> struct color_limits<double> {
+      static inline double max() {return 1.0;}
+    };
 
     /**
      * A class that can store the state of an istream and revert to that state.
      * It also wraps istream::sentry so you don't have to instantiate two helper
      * classes.
      */
-    template<typename Stream>
+    template<typename istreamT>
     class streamstate {
       const std::streampos startPos;
       const std::ios::iostate startState;
       const std::istream::sentry sentry;
       
     public:
-      streamstate(Stream &s) : startPos(s.tellg()), startState(s.rdstate()), sentry(s) {}
-      void reset(Stream &s) const {s.clear(startState); s.seekg(startPos); }
+      streamstate(istreamT &s)
+        : startPos(s.tellg()), startState(s.rdstate()), sentry(s) {}
+      void reset(istreamT &s) const {s.clear(startState); s.seekg(startPos); }
       operator const void *() const {return (sentry ? this : 0); }
     };
     
@@ -116,7 +123,8 @@ namespace p {
               target[0] = color_limits<T>::max();
             }
             // ...
-            else if (textual.size() > 2 && textual[0] == '0' && textual[1] == 'x') {
+            else if (textual.size() > 2 &&
+                     textual[0] == '0' && textual[1] == 'x') {
               // parse it as hex
               unsigned long val = std::strtoul(textual.c_str(), NULL, 16);
               for (std::size_t i = size; i--; ) {
@@ -199,9 +207,9 @@ namespace p {
    * Read a generic vector from a stream. Also supports
    * special values 'null'/'zero' for a vector with 0 length.
    */
-  template<typename T, std::size_t size, typename InStream>
-  InStream &operator >>(InStream &s, vec<T, size> &v) {
-    const detail::streamstate<InStream> start(s);
+  template<typename T, std::size_t size, typename istreamT>
+  istreamT &operator >>(istreamT &s, vec<T, size> &v) {
+    const detail::streamstate<istreamT> start(s);
     if (!start)
       return s;
     
@@ -220,7 +228,8 @@ namespace p {
       
       if (s >> textual) {
         using detail::stricmp;
-        if (stricmp(textual.c_str(), "null") || stricmp(textual.c_str(), "zero")) {
+        if (stricmp(textual.c_str(), "null") ||
+            stricmp(textual.c_str(), "zero")) {
           for (std::size_t i = 0; i < size; ++i)
             v[i] = T();
         }
@@ -233,8 +242,9 @@ namespace p {
     return s;
   }
   
-  template<typename T, std::size_t size, typename InStream>
-  InStream &operator >>(InStream &s, const detail::color_reader_impl<T, size> &reader) {
+  template<typename T, std::size_t size, typename istreamT>
+  istreamT &operator >>(istreamT &s,
+                        const detail::color_reader_impl<T, size> &reader) {
     return reader.read(s);
   }
 }
