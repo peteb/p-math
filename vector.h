@@ -230,7 +230,8 @@ namespace p {
   
   template<typename T, std::size_t size>
   inline T dot_product(const vec<T, size> &v1, const vec<T, size> &v2) {
-    return std::inner_product(v1.components, v1.components + size, v2.components, T());
+    return std::inner_product(v1.components, v1.components + size,
+                              v2.components, T());
   }
   
   template<typename T>
