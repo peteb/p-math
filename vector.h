@@ -31,15 +31,18 @@ namespace p {
 /**
  * The general case.
  */
-template<typename T, std::size_t sizeV>
+template<typename T, std::size_t N>
 struct vec {
   typedef T value_type;
-  enum {size = sizeV};
+  enum {size = N};
   
   explicit vec() {}
   explicit vec(T val) {
     std::uninitialized_fill(components, components + size, val);
   }
+
+  inline T &operator [](std::size_t pos) {return components[pos];}
+  inline T operator [](std::size_t pos) const {return components[pos];}
   
   T components[size];
 };
@@ -63,7 +66,7 @@ struct vec<T, 2> {
   explicit vec(T val) {
     std::uninitialized_fill(components, components + size, val);
   }
-    
+  
   inline T &operator [](std::size_t pos) {return components[pos];}
   inline T operator [](std::size_t pos) const {return components[pos];}
     
