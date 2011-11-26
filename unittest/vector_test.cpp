@@ -48,6 +48,17 @@ TEST(utils_vector, add) {
   EXPECT_FLOAT_EQ(10.2f, v.z);
 }
 
+TEST(utils_vector, pod) {
+  float buf[6] = {-1.0f, 2.0f, 4.0f, 8.0f, 20.0f, -3.0f};
+  
+  vec3 *v = (vec3 *)buf;
+  EXPECT_FLOAT_EQ(v[0].x, -1.0f);
+  EXPECT_FLOAT_EQ(v[0].y, 2.0f);
+  EXPECT_FLOAT_EQ(v[0].z, 4.0f);
+  EXPECT_FLOAT_EQ(v[1].x, 8.0f);
+  EXPECT_FLOAT_EQ(v[1].y, 20.0f);
+  EXPECT_FLOAT_EQ(v[1].z, -3.0f);
+}
 
 #pragma mark - Algorithms
 TEST(utils_vector, minmax) {
