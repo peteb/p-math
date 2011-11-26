@@ -60,6 +60,7 @@ TEST(utils_vector, pod) {
   EXPECT_FLOAT_EQ(v[1].z, -3.0f);
 }
 
+
 #pragma mark - Algorithms
 TEST(utils_vector, minmax) {
   using std::min;
