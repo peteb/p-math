@@ -32,7 +32,8 @@ endif(CMAKE_COMPILER_IS_GNUCXX)
 find_package(GTest REQUIRED)
 
 add_executable(unittest EXCLUDE_FROM_ALL
-  vector_test.cpp  
+  vector_test.cpp
+  matrix_test.cpp
 )
 
 include_directories(
