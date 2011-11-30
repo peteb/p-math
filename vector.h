@@ -26,6 +26,7 @@
 
 namespace p {
 // TODO: make sure clamp, lerp, etc. work with vectors
+/* -------------------------------------------------------------------------- */
 #pragma mark Basic vector types
 
 /**
@@ -153,6 +154,7 @@ struct max_fun {
   
   
   
+/* -------------------------------------------------------------------------- */
 #pragma mark Operators
   
 /**
@@ -207,11 +209,9 @@ template<typename T, std::size_t size, typename scalarT>
 inline vec<T, size>& operator /=(vec<T, size>& lhs, scalarT rhs) {
   lhs = lhs / vec<T, size>(rhs); return lhs;
 }
+
   
-// TODO: some conversions might be nice; truncate..., also, composing vectors together:
-//       vec<T, 4> color(original, 0.5)
-  
-// algorithm overloads
+/* -------------------------------------------------------------------------- */
 #pragma mark Algorithms
 
 /**
@@ -257,7 +257,8 @@ inline T normalize(const T &v) {
   return ret;
 }
 
-#pragma mark Types for usage  
+/* -------------------------------------------------------------------------- */
+#pragma mark Types for usage
 typedef vec<float, 2> vec2;
 typedef vec<float, 3> vec3;
 typedef vec<float, 4> vec4;
