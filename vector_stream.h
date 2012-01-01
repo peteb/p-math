@@ -79,16 +79,16 @@ namespace p {
      * It also wraps istream::sentry so you don't have to instantiate two helper
      * classes.
      */
-    template<typename istreamT>
+    template<typename InStream>
     class streamstate {
       const std::streampos startPos;
       const std::ios::iostate startState;
       const std::istream::sentry sentry;
       
     public:
-      streamstate(istreamT &s)
+      streamstate(InStream &s)
         : startPos(s.tellg()), startState(s.rdstate()), sentry(s) {}
-      void reset(istreamT &s) const {s.clear(startState); s.seekg(startPos); }
+      void reset(InStream &s) const {s.clear(startState); s.seekg(startPos); }
       operator const void *() const {return (sentry ? this : 0); }
     };
 
@@ -110,9 +110,9 @@ namespace p {
       {
       }
       
-      template<typename streamT>
-      streamT &read(streamT &is) const {
-        const streamstate<streamT> start(is);
+      template<typename Stream>
+      Stream &read(Stream &is) const {
+        const streamstate<Stream> start(is);
         if (!start)
           return is;
         
@@ -208,9 +208,9 @@ namespace p {
    * Read a generic vector from a stream. Also supports
    * special values 'null'/'zero' for a vector with 0 length.
    */
-  template<typename T, std::size_t size, typename istreamT>
-  istreamT &operator >>(istreamT &s, vec<T, size> &v) {
-    const detail::streamstate<istreamT> start(s);
+  template<typename T, std::size_t size, typename InStream>
+  InStream &operator >>(InStream &s, vec<T, size> &v) {
+    const detail::streamstate<InStream> start(s);
     if (!start)
       return s;
     
@@ -243,8 +243,8 @@ namespace p {
     return s;
   }
   
-  template<typename T, std::size_t size, typename istreamT>
-  istreamT &operator >>(istreamT &s,
+  template<typename T, std::size_t size, typename InStream>
+  InStream &operator >>(InStream &s,
                         const detail::color_reader_impl<T, size> &reader) {
     return reader.read(s);
   }
