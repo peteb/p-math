@@ -38,9 +38,9 @@ namespace p {
   namespace detail {
     // this is needed because chars should be cast to ints when outputted
     template<typename T>
-    struct textual_rep {typedef T type;};
-    template<> struct textual_rep<unsigned char> {typedef int type;};
-    template<> struct textual_rep<signed char> {typedef int type;};
+    struct int_type {typedef T type;};
+    template<> struct int_type<unsigned char> {typedef int type;};
+    template<> struct int_type<signed char> {typedef int type;};
 
     bool stricmp(const char *s1, const char *s2) {
       std::size_t i = 0;
@@ -194,7 +194,7 @@ namespace p {
       s << (ss ? ss : detail::fail(s));
     }
     else {
-      typedef typename detail::textual_rep<T>::type text_rep;
+      typedef typename detail::int_type<T>::type text_rep;
       
       s << text_rep(v[0]);
       for (std::size_t i = 1; i < size; ++i)
@@ -216,7 +216,7 @@ namespace p {
     
     if (s >> v.components[0]) {
       for (std::size_t i = 1; i < size && s.good(); ++i) {
-        typename detail::textual_rep<T>::type tmp;
+        typename detail::int_type<T>::type tmp;
         s >> tmp;
         v[i] = tmp;
       }
