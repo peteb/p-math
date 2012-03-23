@@ -39,7 +39,7 @@ namespace p {
   
     explicit vec() {}
     explicit vec(T val) {
-      std::uninitialized_fill(components, components + size, val);
+      std::fill(components, components + size, val);
     }
 
     inline T &operator [](std::size_t pos) {return components[pos];}
@@ -65,7 +65,7 @@ namespace p {
     explicit vec() {}
     explicit vec(T x, T y) : x(x), y(y) {}
     explicit vec(T val) {
-      std::uninitialized_fill(components, components + size, val);
+      std::fill(components, components + size, val);
     }
   
     inline T &operator [](std::size_t pos) {return components[pos];}
@@ -90,7 +90,7 @@ namespace p {
     explicit vec() {}
     explicit vec(T x, T y, T z) : x(x), y(y), z(z) {}
     explicit vec(T val) {
-      std::uninitialized_fill(components, components + size, val);
+      std::fill(components, components + size, val);
     }
 
     inline T &operator [](std::size_t pos) {return components[pos];}
@@ -116,7 +116,7 @@ namespace p {
     explicit vec() {}
     explicit vec(T x, T y, T z, T w) : x(x), y(y), z(z), w(w) {}
     explicit vec(T val) {
-      std::uninitialized_fill(components, components + size, val);
+      std::fill(components, components + size, val);
     }
     
     inline T &operator [](std::size_t pos) {return components[pos];}
