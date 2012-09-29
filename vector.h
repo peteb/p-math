@@ -35,7 +35,7 @@ namespace p {
   template<typename T, std::size_t N>
   struct vec {
     typedef T value_type;
-    enum {size = N};
+    static const std::size_t size = N;
   
     inline T &operator [](std::size_t pos) {return components[pos];}
     inline T operator [](std::size_t pos) const {return components[pos];}
@@ -55,7 +55,7 @@ namespace p {
   template<typename T>
   struct vec<T, 2> {
     typedef T value_type;
-    enum {size = 2};
+    static const std::size_t size = 2;
     
     inline T &operator [](std::size_t pos) {return components[pos];}
     inline T operator [](std::size_t pos) const {return components[pos];}
@@ -74,7 +74,7 @@ namespace p {
   template<typename T>
   struct vec<T, 3> {
     typedef T value_type;
-    enum {size = 3};
+    static const std::size_t size = 3;
 
     inline T &operator [](std::size_t pos) {return components[pos];}
     inline T operator [](std::size_t pos) const {return components[pos];}
@@ -94,7 +94,7 @@ namespace p {
   template<typename T>
   struct vec<T, 4> {
     typedef T value_type;
-    enum {size = 4};
+    static const int size = 4;
     
     inline T &operator [](std::size_t pos) {return components[pos];}
     inline T operator [](std::size_t pos) const {return components[pos];}
