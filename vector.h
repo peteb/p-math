@@ -37,11 +37,6 @@ namespace p {
     typedef T value_type;
     enum {size = N};
   
-    explicit vec() {}
-    explicit vec(T val) {
-      std::fill(components, components + size, val);
-    }
-
     inline T &operator [](std::size_t pos) {return components[pos];}
     inline T operator [](std::size_t pos) const {return components[pos];}
   
@@ -62,12 +57,6 @@ namespace p {
     typedef T value_type;
     enum {size = 2};
     
-    explicit vec() {}
-    explicit vec(T x, T y) : x(x), y(y) {}
-    explicit vec(T val) {
-      std::fill(components, components + size, val);
-    }
-  
     inline T &operator [](std::size_t pos) {return components[pos];}
     inline T operator [](std::size_t pos) const {return components[pos];}
     
@@ -77,7 +66,7 @@ namespace p {
       struct {T components[size]; };
     };
   };
-  
+
   
   /**
    * Specialization of vector for 3 components, which must be POD type.
@@ -86,12 +75,6 @@ namespace p {
   struct vec<T, 3> {
     typedef T value_type;
     enum {size = 3};
-
-    explicit vec() {}
-    explicit vec(T x, T y, T z) : x(x), y(y), z(z) {}
-    explicit vec(T val) {
-      std::fill(components, components + size, val);
-    }
 
     inline T &operator [](std::size_t pos) {return components[pos];}
     inline T operator [](std::size_t pos) const {return components[pos];}
@@ -113,12 +96,6 @@ namespace p {
     typedef T value_type;
     enum {size = 4};
     
-    explicit vec() {}
-    explicit vec(T x, T y, T z, T w) : x(x), y(y), z(z), w(w) {}
-    explicit vec(T val) {
-      std::fill(components, components + size, val);
-    }
-    
     inline T &operator [](std::size_t pos) {return components[pos];}
     inline T operator [](std::size_t pos) const {return components[pos];}
     
@@ -129,7 +106,38 @@ namespace p {
       struct {T components[size]; };
     };    
   };
+
+
+#pragma mark Constructors
   
+  template<typename T>
+  inline vec<T, 2> make_vec(T x, T y) {
+    const vec<T, 2> r = {x, y}; return r;
+  }
+  template<typename T>
+  inline vec<T, 3> make_vec(T x, T y, T z) {
+    const vec<T, 3> r = {x, y, z}; return r;
+  }
+  template<typename T>
+  inline vec<T, 4> make_vec(T x, T y, T z, T w) {
+    const vec<T, 4> r = {x, y, z, w}; return r;
+  }
+
+  template<typename T, std::size_t sz>
+  struct scalar_helper {
+    static vec<T, sz> make(T s) {asm("int $3"); }
+  };
+
+  template<typename T>
+  struct scalar_helper<T, 2> {static vec<T, 2> make(T s) {return make_vec<T>(s, s); }};
+  template<typename T>
+  struct scalar_helper<T, 3> {static vec<T, 3> make(T s) {return make_vec<T>(s, s, s); }};
+  template<typename T>
+  struct scalar_helper<T, 4> {static vec<T, 4> make(T s) {return make_vec<T>(s, s, s, s); }};
+
+  template<typename T, std::size_t sz> vec<T, sz> make_vec(T s) {return scalar_helper<T, sz>::make(s); }
+  template<typename T, std::size_t sz> vec<T, sz> make_vec(const vec<T, sz> &s) {return s; }
+
   
 #pragma mark Helpers
     
@@ -182,12 +190,12 @@ namespace p {
 
   template<typename T, std::size_t size, typename scalarT> 
   inline vec<T, size> operator *(const vec<T, size> &lhs, scalarT rhs) {
-    return transform(lhs, vec<T, size>(rhs), std::multiplies<T>());
+    return transform(lhs, make_vec<T, size>(rhs), std::multiplies<T>());
   }
 
   template<typename T, std::size_t size, typename scalarT> 
   inline vec<T, size> operator /(const vec<T, size>& lhs, scalarT rhs) {
-    return transform(lhs, vec<T, size>(rhs), std::divides<T>());
+    return transform(lhs, make_vec<T, size>(rhs), std::divides<T>());
   }
   
   template<typename T, std::size_t size> 
@@ -202,12 +210,12 @@ namespace p {
 
   template<typename T, std::size_t size, typename scalarT> 
   inline vec<T, size>& operator *=(vec<T, size>& lhs, scalarT rhs) {
-    lhs = lhs * vec<T, size>(rhs); return lhs;
+    lhs = lhs * make_vec<T, size>(rhs); return lhs;
   }
 
   template<typename T, std::size_t size, typename scalarT> 
   inline vec<T, size>& operator /=(vec<T, size>& lhs, scalarT rhs) {
-    lhs = lhs / vec<T, size>(rhs); return lhs;
+    lhs = lhs / make_vec<T, size>(rhs); return lhs;
   }
 
   
