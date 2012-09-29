@@ -123,20 +123,28 @@ namespace p {
     const vec<T, 4> r = {x, y, z, w}; return r;
   }
 
-  template<typename T, std::size_t sz>
-  struct scalar_helper {
-    static vec<T, sz> make(T s) {asm("int $3"); }
-  };
-
-  template<typename T>
-  struct scalar_helper<T, 2> {static vec<T, 2> make(T s) {return make_vec<T>(s, s); }};
-  template<typename T>
-  struct scalar_helper<T, 3> {static vec<T, 3> make(T s) {return make_vec<T>(s, s, s); }};
-  template<typename T>
-  struct scalar_helper<T, 4> {static vec<T, 4> make(T s) {return make_vec<T>(s, s, s, s); }};
-
-  template<typename T, std::size_t sz> vec<T, sz> make_vec(T s) {return scalar_helper<T, sz>::make(s); }
-  template<typename T, std::size_t sz> vec<T, sz> make_vec(const vec<T, sz> &s) {return s; }
+  namespace detail {
+    template<std::size_t sz, typename T>
+    struct scalar_helper {
+      static vec<T, sz> make(T s) {
+        vec<T, sz> r;
+        T *beg = reinterpret_cast<T *>(&r);
+        T *end = beg + sz;
+        std::fill(beg, end, s);
+        return r;
+      }
+    };
+    
+    template<typename T>
+    struct scalar_helper<2, T> {static vec<T, 2> make(T s) {return make_vec<T>(s, s); }};
+    template<typename T>
+    struct scalar_helper<3, T> {static vec<T, 3> make(T s) {return make_vec<T>(s, s, s); }};
+    template<typename T>
+    struct scalar_helper<4, T> {static vec<T, 4> make(T s) {return make_vec<T>(s, s, s, s); }};
+  }
+  
+  template<std::size_t sz, typename T> vec<T, sz> make_vec(T s) {return detail::scalar_helper<sz, T>::make(s); }
+  template<std::size_t sz, typename T> vec<T, sz> make_vec(const vec<T, sz> &s) {return s; }
 
   
 #pragma mark Helpers
@@ -190,12 +198,12 @@ namespace p {
 
   template<typename T, std::size_t size, typename scalarT> 
   inline vec<T, size> operator *(const vec<T, size> &lhs, scalarT rhs) {
-    return transform(lhs, make_vec<T, size>(rhs), std::multiplies<T>());
+    return transform(lhs, make_vec<size>(rhs), std::multiplies<T>());
   }
 
   template<typename T, std::size_t size, typename scalarT> 
   inline vec<T, size> operator /(const vec<T, size>& lhs, scalarT rhs) {
-    return transform(lhs, make_vec<T, size>(rhs), std::divides<T>());
+    return transform(lhs, make_vec<size>(rhs), std::divides<T>());
   }
   
   template<typename T, std::size_t size> 
@@ -210,12 +218,12 @@ namespace p {
 
   template<typename T, std::size_t size, typename scalarT> 
   inline vec<T, size>& operator *=(vec<T, size>& lhs, scalarT rhs) {
-    lhs = lhs * make_vec<T, size>(rhs); return lhs;
+    lhs = lhs * make_vec<size, T>(rhs); return lhs;
   }
 
   template<typename T, std::size_t size, typename scalarT> 
   inline vec<T, size>& operator /=(vec<T, size>& lhs, scalarT rhs) {
-    lhs = lhs / make_vec<T, size>(rhs); return lhs;
+    lhs = lhs / make_vec<size, T>(rhs); return lhs;
   }
 
   

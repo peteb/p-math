@@ -60,6 +60,13 @@ TEST(utils_vector, pod) {
   EXPECT_FLOAT_EQ(v[1].z, -3.0f);
 }
 
+TEST(utils_vector, fill_large_vec) {
+  typedef vec<int, 6> vec6;
+  vec6 v = make_vec<vec6::size>(12345);
+  EXPECT_EQ(v[0], 12345);
+  EXPECT_EQ(v[5], 12345);
+}
+
 
 #pragma mark - Algorithms
 TEST(utils_vector, minmax) {
