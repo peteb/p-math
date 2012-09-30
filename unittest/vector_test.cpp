@@ -74,7 +74,10 @@ TEST(utils_vector, mono_max) {
   int a1 = p::max(v1);
   int a2 = p::max(v2);
   int a3 = p::max(v3);
-  
+
+  EXPECT_EQ(a1, 3123);
+  EXPECT_EQ(a2, 4444);
+  EXPECT_EQ(a3, 888);
 }
 
 TEST(utils_vector, minmax) {

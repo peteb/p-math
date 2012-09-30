@@ -51,7 +51,7 @@ namespace p {
   };
 
   /**
-   * Undefined deranged case of a vector.
+   * Undefined deranged case.
    */
   template<typename T>
   struct vec<T, 0> {private: vec();};
