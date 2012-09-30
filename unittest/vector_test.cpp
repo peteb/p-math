@@ -67,6 +67,16 @@ TEST(utils_vector, fill_large_vec) {
   EXPECT_EQ(v[5], 12345);
 }
 
+TEST(utils_vector, mono_max) {
+  ivec3 v1 = {3123, -44, 888};
+  ivec3 v2 = {-123, 4444, 888};
+  ivec3 v3 = {123, -44, 888};
+
+  int a1 = p::max(v1);
+  int a2 = p::max(v2);
+  int a3 = p::max(v3);
+  
+}
 
 #pragma mark - Algorithms
 TEST(utils_vector, minmax) {

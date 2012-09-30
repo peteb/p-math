@@ -2,7 +2,7 @@
  *
  * Accessing components
  *   through []-operator
- *   copying vector memory to buffer
+ *   casting to pointer
  *   .x/.r/.s
  *   .y/.g/.t
  *   .z/.b/.p
@@ -168,6 +168,14 @@ namespace p {
     T operator()(T lhs, T rhs) const {using std::max; return max(lhs, rhs); }
   };
   
+  template<typename T, std::size_t size, typename OpT>
+  inline T foldl(const vec<T, size> &v, OpT op) {
+    T val = v[0];
+    for (std::size_t i = 1; i < size; ++i)
+      val = op(val, v[i]);
+
+    return val;
+  };
   
   
   /* ------------------------------------------------------------------------ */
@@ -246,6 +254,20 @@ namespace p {
     return transform(v1, v2, max_fun<T>());
   }
 
+  template<typename T, std::size_t size>
+  inline T max(const vec<T, size> &v) {
+    using std::max;
+    return foldl(v, max_fun<T>());
+  }
+
+  template<typename T, std::size_t size>
+  inline vec<T, size> abs(const vec<T, size> &v) {
+    using std::abs;
+    vec<T, size> r;
+    for (std::size_t i = 0; i < size; ++i)
+      r[i] = abs(v[i]);
+    return r;
+  }
   
   template<typename T, std::size_t size>
   inline T dot_product(const vec<T, size> &v1, const vec<T, size> &v2) {
