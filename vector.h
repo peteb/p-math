@@ -288,13 +288,17 @@ namespace p {
     return sqrt(sumSquared);
   }
   
-  // very generic normalize function
   template<typename T>
-  inline T normalize(const T &v) {
+  inline T normalize_fast(const T &v) {
     T ret = v / magnitude(v);
     return ret;
   }
 
+  template<typename T>
+  inline T normalize(const T &v) {
+    return normalize_fast(v);
+  }
+  
   /* ------------------------------------------------------------------------ */
 #pragma mark Types for usage
   typedef vec<float, 2> vec2;
