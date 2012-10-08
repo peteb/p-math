@@ -132,9 +132,14 @@ namespace p {
             else if (textual.size() > 2 &&
                      textual[0] == '0' && textual[1] == 'x') {
               // parse it as hex
+	      // convert_from_bin_component to type_component
+	      // convert(0x000000FF, 8, float)
+	      // TODO: this involves some muls/divs; integer conversions
+	      //       might turn out incorrect. Maybe there should be a
+	      //       fast-path for those.
               unsigned long val = std::strtoul(textual.c_str(), NULL, 16);
               for (std::size_t i = size; i--; ) {
-                target[i] = ((val & 0xFF) / 255.0) * color_limits<T>::max();
+                target[i] = (val & 0xFF) * (color_limits<T>::max() / 255.0);
                 val >>= 8;
               }
             }
