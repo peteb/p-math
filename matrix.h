@@ -21,9 +21,9 @@ namespace p {
     enum {width = M};
     enum {height = N};
 
-    explicit mat() {}
+    mat() = default;
     explicit mat(T val) {
-      std::uninitialized_fill(components, components + M*N, val);
+      std::fill(components, components + M*N, val);
     }
 
     vec<T, M> &row(std::size_t j) {

@@ -202,16 +202,27 @@ TEST(utils_vector, color_parse) {
     EXPECT_TRUE(ss >> color_reader(c));
     EXPECT_FLOAT_EQ(1.0f, c.r);
     EXPECT_FLOAT_EQ(0.66666666f, c.g);
-    EXPECT_NEAR(0.13333333f, c.b, 0.02f);
+    EXPECT_NEAR(0.13333333f, c.b, 0.01f);
   }
   
   {
-    std::stringstream ss("0xFF0088");
-    ubvec3 c;
-    EXPECT_TRUE(ss >> color_reader(c));
-    EXPECT_EQ(0xFF, c.r);
-    EXPECT_EQ(0x00, c.g);
-    EXPECT_EQ(0x88, c.b);
+    {
+      std::stringstream ss("0xFF0088");
+      ubvec3 c;
+      EXPECT_TRUE(ss >> color_reader(c));
+      EXPECT_EQ(0xFF, c.r);
+      EXPECT_EQ(0x00, c.g);
+      EXPECT_EQ(0x88, c.b);
+    }
+
+    {
+      std::stringstream ss("0xFF0080");
+      vec3 c;
+      EXPECT_TRUE(ss >> color_reader(c));
+      EXPECT_FLOAT_EQ(1.0f, c.r);
+      EXPECT_FLOAT_EQ(0.0f, c.g);
+      EXPECT_NEAR(0.5f, c.b, 0.01f);
+    }
   }
 }
 
