@@ -41,7 +41,7 @@ namespace p {
     vec() = default;
     vec(const vec &) = default;
     vec(T s) {
-      std::fill(std::begin(components), std::end(components), s);
+      std::fill(std::begin(components), std::begin(components) + N, s);
     }
     
     inline T &operator [](std::size_t pos) {return components[pos];}
