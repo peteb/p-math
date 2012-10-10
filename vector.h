@@ -307,6 +307,4 @@ namespace p {
   static_assert(std::is_pod<ivec4>::value, "should be POD");  
 } // !p
 
-
-
 #endif // !P_UTILS_VECTOR_H
