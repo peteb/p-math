@@ -39,8 +39,8 @@ TEST(utils_vector, div) {
 
 TEST(utils_vector, add) {
   vec3 v{1.0f, 2.0f, 3.0f};
-  v += make_vec(3.0f, 4.0f, 5.0f);
-  v = v + make_vec(2.0f, 2.1f, 2.2f);
+  v += vec3{3.0f, 4.0f, 5.0f};
+  v = v + vec3{2.0f, 2.1f, 2.2f};
   
   EXPECT_FLOAT_EQ(6.0f, v.x);
   EXPECT_FLOAT_EQ(8.1f, v.y);
@@ -61,7 +61,7 @@ TEST(utils_vector, pod) {
 
 TEST(utils_vector, fill_large_vec) {
   typedef vec<int, 6> vec6;
-  vec6 v = make_vec<vec6::size>(12345);
+  vec6 v{12345};
   EXPECT_EQ(v[0], 12345);
   EXPECT_EQ(v[5], 12345);
 }
