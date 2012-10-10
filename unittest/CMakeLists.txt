@@ -30,6 +30,7 @@ endif(CMAKE_COMPILER_IS_GNUCXX)
 
 
 find_package(GTest REQUIRED)
+find_package(Threads)
 
 add_executable(unittest EXCLUDE_FROM_ALL
   vector_test.cpp
@@ -44,4 +45,5 @@ include_directories(
 target_link_libraries(unittest
   ${GTEST_MAIN_LIBRARY}
   ${GTEST_LIBRARY}
+  pthread
 )
