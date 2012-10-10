@@ -21,7 +21,7 @@ namespace p {
     enum {width = M};
     enum {height = N};
 
-    mat() = default;
+    mat() {}
     explicit mat(T val) {
       std::fill(components, components + M*N, val);
     }

@@ -23,7 +23,6 @@
 #include <numeric>
 #include <memory>
 #include <cstring>
-#include <type_traits>
 #include <string>
 
 namespace p {
