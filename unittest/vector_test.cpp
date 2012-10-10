@@ -78,7 +78,6 @@ TEST(utils_vector, mono_max) {
   
 }
 
-#pragma mark - Algorithms
 TEST(utils_vector, minmax) {
   using std::min;
   vec3 v1 = {1.0f, -3.0f, 4.0f};
@@ -154,7 +153,6 @@ TEST(utils_vector, normalize) {
 
 // TODO: normalized, magnitude
 
-#pragma mark - Conversions
 TEST(utils_vector, string) {
   vec3 v = {3.0f, 2.0f, 1.5f};
   std::stringstream ss;

@@ -23,12 +23,12 @@
 #include <numeric>
 #include <memory>
 #include <cstring>
+#include <type_traits>
+#include <string>
 
 namespace p {
   // TODO: make sure clamp, lerp, etc. work with vectors
-  /* ------------------------------------------------------------------------ */
-#pragma mark Basic vector types
-  
+
   /**
    * The general case.
    */
@@ -108,8 +108,6 @@ namespace p {
   };
 
 
-#pragma mark Constructors
-  
   template<typename T>
   inline vec<T, 2> make_vec(T x, T y) {
     const vec<T, 2> r = {x, y}; return r;
@@ -147,8 +145,6 @@ namespace p {
   template<std::size_t sz, typename T> vec<T, sz> make_vec(const vec<T, sz> &s) {return s; }
 
   
-#pragma mark Helpers
-    
   template<typename T, std::size_t size, typename opT>
   inline vec<T, size> transform(const vec<T, size> &lhs,
                                 const vec<T, size> &rhs, opT op) {
@@ -177,9 +173,6 @@ namespace p {
     return val;
   };
   
-  
-  /* ------------------------------------------------------------------------ */
-#pragma mark Operators
   
   /**
    * Unary minus; component-wise negation.
@@ -235,9 +228,6 @@ namespace p {
   }
 
   
-  /* ------------------------------------------------------------------------ */
-#pragma mark Algorithms
-
   /**
    * Component-wise minimum.
    */
@@ -299,8 +289,6 @@ namespace p {
     return normalize_fast(v);
   }
   
-  /* ------------------------------------------------------------------------ */
-#pragma mark Types for usage
   typedef vec<float, 2> vec2;
   typedef vec<float, 3> vec3;
   typedef vec<float, 4> vec4;
