@@ -20,7 +20,7 @@ TEST(utils_vector, mul) {
 }
 
 TEST(utils_vector, negation) {
-  vec3 v = {1.0f, 2.0f, 3.0f};
+  vec3 v{1.0f, 2.0f, 3.0f};
   vec3 v2 = -v;
   
   EXPECT_FLOAT_EQ(-1.0f, v2.x);
@@ -29,7 +29,7 @@ TEST(utils_vector, negation) {
 }
 
 TEST(utils_vector, div) {
-  vec3 v = {1.0f, 2.0f, 3.0f};
+  vec3 v{1.0f, 2.0f, 3.0f};
   v /= 3.0f;
   v = v / 2.0f;
   
@@ -39,7 +39,7 @@ TEST(utils_vector, div) {
 }
 
 TEST(utils_vector, add) {
-  vec3 v = {1.0f, 2.0f, 3.0f};
+  vec3 v{1.0f, 2.0f, 3.0f};
   v += make_vec(3.0f, 4.0f, 5.0f);
   v = v + make_vec(2.0f, 2.1f, 2.2f);
   

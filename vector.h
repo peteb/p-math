@@ -297,6 +297,16 @@ namespace p {
   typedef vec<int, 4> ivec4;
   typedef vec<unsigned char, 3> ubvec3;
   typedef vec<unsigned char, 4> ubvec4;
+
+  
+  static_assert(std::is_pod<vec2>::value, "should be POD");
+  static_assert(std::is_pod<vec3>::value, "should be POD");
+  static_assert(std::is_pod<vec4>::value, "should be POD");
+  static_assert(std::is_pod<ivec2>::value, "should be POD");
+  static_assert(std::is_pod<ivec3>::value, "should be POD");
+  static_assert(std::is_pod<ivec4>::value, "should be POD");  
 } // !p
+
+
 
 #endif // !P_UTILS_VECTOR_H
