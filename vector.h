@@ -36,7 +36,9 @@ namespace p {
   struct vec {
     typedef T value_type;
     static const std::size_t size = N;
-  
+
+    vec() = default;
+    
     inline T &operator [](std::size_t pos) {return components[pos];}
     inline T operator [](std::size_t pos) const {return components[pos];}
   
@@ -56,6 +58,9 @@ namespace p {
   struct vec<T, 2> {
     typedef T value_type;
     static const std::size_t size = 2;
+
+    vec() = default;
+    vec(T x, T y) : x(x), y(y) {}
     
     inline T &operator [](std::size_t pos) {return components[pos];}
     inline T operator [](std::size_t pos) const {return components[pos];}
@@ -76,9 +81,11 @@ namespace p {
     typedef T value_type;
     static const std::size_t size = 3;
 
+    vec() = default;
+    vec(T x, T y, T z) : x(x), y(y), z(z) {}
+    
     inline T &operator [](std::size_t pos) {return components[pos];}
     inline T operator [](std::size_t pos) const {return components[pos];}
-
 
     union {
       struct {T x, y, z; };
@@ -95,6 +102,9 @@ namespace p {
   struct vec<T, 4> {
     typedef T value_type;
     static const int size = 4;
+
+    vec() = default;
+    vec(T x, T y, T z, T w) : x(x), y(y), z(z), w(w) {}
     
     inline T &operator [](std::size_t pos) {return components[pos];}
     inline T operator [](std::size_t pos) const {return components[pos];}

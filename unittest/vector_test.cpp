@@ -8,7 +8,6 @@
 
 using namespace p;
 
-#pragma mark - Operators
 TEST(utils_vector, mul) {
   vec3 v = {1.0f, 2.0f, 3.0f};
   v *= 3.0f;
