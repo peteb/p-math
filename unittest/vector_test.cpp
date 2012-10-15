@@ -195,6 +195,16 @@ TEST(utils_vector, color_parse) {
     EXPECT_FLOAT_EQ(0.0f, c.g);
     EXPECT_FLOAT_EQ(0.0f, c.b);
   }
+
+  {
+    std::stringstream ss("red");
+    vec4 c;
+    EXPECT_TRUE(ss >> color_reader(c));
+    EXPECT_FLOAT_EQ(1.0f, c.r);
+    EXPECT_FLOAT_EQ(0.0f, c.g);
+    EXPECT_FLOAT_EQ(0.0f, c.b);
+    EXPECT_FLOAT_EQ(1.0f, c.a);
+  }
   
   {
     std::stringstream ss("0xFFAA22");

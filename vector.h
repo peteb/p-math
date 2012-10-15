@@ -272,6 +272,11 @@ namespace p {
   inline T normalize(const T &v) {
     return normalize_fast(v);
   }
+
+  template<typename T, std::size_t size>
+  inline vec<T, size-1> &truncate(vec<T, size> &val) {
+    return reinterpret_cast<vec<T, size-1> &>(val);
+  }
   
   typedef vec<float, 2> vec2;
   typedef vec<float, 3> vec3;

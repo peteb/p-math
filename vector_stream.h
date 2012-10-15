@@ -31,6 +31,7 @@
 #include <cstdlib>
 #include <limits>
 #include <sstream>
+#include <locale>
 
 #include "vector.h"
 
@@ -97,7 +98,69 @@ namespace p {
       os.clear(std::ios::failbit);
       return os;
     }
+
+    template<typename T, std::size_t size>
+    class textual_color_parser {};
+
+
+    template<typename T, std::size_t size>
+    bool color_parse_hex(const std::string &str, vec<T, size> &ret) {
+      if (str.size() <= 2 || str[0] != '0' || str[1] != 'x')
+	return false;
+      
+      // parse it as hex
+      // convert_from_bin_component to type_component
+      // convert(0x000000FF, 8, float)
+      // TODO: this involves some muls/divs; integer conversions
+      //       might turn out incorrect. Maybe there should be a
+      //       fast-path for those.
+      unsigned long val = std::strtoul(str.c_str(), NULL, 16);
+      for (std::size_t i = size; i--; ) {
+	ret[i] = (val & 0xFF) * (color_limits<T>::max() / 255.0);
+	val >>= 8;
+      }
+
+      return true;
+    }
     
+    template<typename T>
+    class textual_color_parser<T, 3> {
+    public:
+      bool get(const char *str, vec<T, 3> &retval) const {
+	std::string lower(str);
+	std::transform(begin(lower), end(lower),
+		       begin(lower), [](char &c){return std::tolower(c);});
+	// we include both cctype and locale, so we need a lambda.
+	
+	if (lower == "red") {
+	  retval = vec<T, 3>{color_limits<T>::max(), T(), T()};
+	}
+	else {
+	  return color_parse_hex(lower, retval);
+	}
+	  
+	return true;
+      }
+    };
+
+    // this class is for parsing alpha, it uses the 3 component parser
+    // but sets the last component to max.
+    template<typename T>
+    class textual_color_parser<T, 4> {
+      textual_color_parser<T, 3> subparser;
+      
+    public:
+      bool get(const char *str, vec<T, 4> &retval,
+	       const T &alpha = color_limits<T>::max()) const {
+	if (subparser.get(str, truncate(retval))) {
+	  retval[3] = alpha;
+	  return true;
+	}
+
+	return false;
+      }
+    };
+	
     /**
      * Parsing helping class for reading colors from stream.
      * Should be created with p::color_reader.
@@ -123,29 +186,10 @@ namespace p {
           if (is >> textual) {
             // TODO: test with whitespace
             // TODO: first try parsing as components
-            
-            if (stricmp(textual.c_str(), "red")) {
-              set_all_but(target, 0);
-              target[0] = color_limits<T>::max();
-            }
-            // ...
-            else if (textual.size() > 2 &&
-                     textual[0] == '0' && textual[1] == 'x') {
-              // parse it as hex
-	      // convert_from_bin_component to type_component
-	      // convert(0x000000FF, 8, float)
-	      // TODO: this involves some muls/divs; integer conversions
-	      //       might turn out incorrect. Maybe there should be a
-	      //       fast-path for those.
-              unsigned long val = std::strtoul(textual.c_str(), NULL, 16);
-              for (std::size_t i = size; i--; ) {
-                target[i] = (val & 0xFF) * (color_limits<T>::max() / 255.0);
-                val >>= 8;
-              }
-            }
-            else {
-              fail(is);
-            }
+
+	    static textual_color_parser<T, size> parser;
+	    if (!parser.get(textual.c_str(), target))
+	      fail(is);
           }
         }
         
@@ -208,7 +252,7 @@ namespace p {
   
     return s;  
   }  
-  
+
   /**
    * Read a generic vector from a stream. Also supports
    * special values 'null'/'zero' for a vector with 0 length.
