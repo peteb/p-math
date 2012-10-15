@@ -67,6 +67,8 @@ namespace p {
       static inline double max() {return 1.0;}
     };
 
+    // TODO: something so we can get a fraction, needed for colors etc.
+    
     /**
      * A class that can store the state of an istream and revert to that state.
      * It also wraps istream::sentry so you don't have to instantiate two helper
@@ -192,7 +194,7 @@ namespace p {
           // TODO: test with whitespace
           // TODO: first try parsing as components
 
-          static textual_color_parser<T, size> parser;
+          textual_color_parser<T, size> parser;
           if (!parser.get(textual.c_str(), target))
             fail(is);
         }

@@ -186,6 +186,15 @@ TEST(utils_vector, parse) {
   }
 }
 
+TEST(utils_vector, bench_color_parse) {
+  std::stringstream ss;
+  vec3 c;
+  for (std::size_t i = 0; i < 200000000; ++i) {
+    ss << "green";
+    ss >> color_reader(c);
+  }
+}
+
 TEST(utils_vector, color_parse) {
   {
     std::stringstream ss("red");
@@ -204,7 +213,7 @@ TEST(utils_vector, color_parse) {
     EXPECT_FLOAT_EQ(0.0f, c.g);
     EXPECT_FLOAT_EQ(0.0f, c.b);
     EXPECT_FLOAT_EQ(1.0f, c.a);
-  }
+  }  
   
   {
     std::stringstream ss("0xFFAA22");
