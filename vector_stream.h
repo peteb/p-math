@@ -55,15 +55,6 @@ namespace p {
       return true;
     }
     
-    template<typename T, std::size_t size>
-    void set_all_but(vec<T, size> &vector, std::size_t ignore, T value = T()) {
-      for (std::size_t i = 0; i < size; ++i) {
-        if (i != ignore) {
-          vector[i] = value;
-        }
-      }
-    }
-    
     // color limits; 1.0 = max for floats/doubles, 255 = max for uchar, etc.
     template<typename T>
     struct color_limits {
@@ -133,9 +124,14 @@ namespace p {
     public:
       textual_color_parser() :
         presets{
-        "red", {lims::max(), T(), T()}}
-    }
+          {"red",   {lims::max(), T(), T()}},
+          {"green", {T(), lims::max(), T()}},
+          {"blue",  {T(), T(), lims::max()}}      
+        }
       {}
+
+      // TODO: the presets can be optimized by storing them in an array,
+      //       and do binary search on that.
       
       bool get(const char *str, vec<T, 3> &retval) const {
         std::string lower(str);
@@ -143,12 +139,10 @@ namespace p {
                        begin(lower), [](char &c){return std::tolower(c);});
         // we include both cctype and locale, so we need a lambda.
         auto iter = presets.find(lower);
-        if (iter != end(presets)) {
+        if (iter != end(presets))
           retval = iter->second;
-        }
-        else {
+        else
           return color_parse_hex(lower, retval);
-        }
 	  
         return true;
       }
